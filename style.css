@@ -23,9 +23,9 @@
   
   .header {
     background: var(--primary-color);
+    margin-left: -75px;
     color: white;
     text-align: center;
-    padding: 2em 0;
     position: relative;
     overflow: hidden;
     width: auto;

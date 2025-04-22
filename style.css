@@ -26,9 +26,10 @@
     color: white;
     text-align: center;
     padding: 2em 0;
+    position: relative;
     overflow: hidden;
     width: auto;
-    height: 400px;
+    height: 450px;
   }
   
   .header::before {

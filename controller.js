@@ -342,7 +342,7 @@ function calcularCasaModerna() {
         grava: Math.ceil(area * 0.3),
         varillas_acero: Math.ceil(area * 7),
         ladrillos: materialPrincipal === 'ladrillo' ? Math.ceil(area * 60) : 0,
-        madera: materialPrincipal === 'madera' ? Math.ceil(area * 0.3) : Math.ceil(area * 0.1),
+        madera: materialPrincipal === 'madera' ? Math.ceil(area * 0.2) : Math.ceil(area * 0.1),
         tejas: tipoTecho === 'teja' ? Math.ceil(area * 25) : 0,
         laminas: tipoTecho === 'metalico' ? Math.ceil(area * 0.5) : 0,
         pintura: Math.ceil(area * 0.2),
@@ -382,7 +382,7 @@ function calcularCasaCampo() {
 
     if (materialPrincipal === 'ladrillo') {
         ladrillos = Math.ceil(area * 50);
-        madera = Math.ceil(area * 0.4); // Ajustar si es necesario
+        madera = Math.ceil(area * 0.4);
     }
 
     const pintura = Math.ceil(area * 0.15);
@@ -403,7 +403,6 @@ function calcularCasaCampo() {
     const rejas = habitaciones + banos + 12;
     const cerraduras = habitaciones + banos + 18;
     const iluminacion = habitaciones + banos + 25;
-    const ventilacion = habitaciones + banos + 30;
 
     return {
         cemento,
@@ -427,10 +426,11 @@ function calcularCasaCampo() {
             rejas,
             cerraduras,
             iluminacion,
-            ventilacion
+            ventilacion: habitaciones + banos + 35
         }
     };
 }
+
 
 function calcularCasaMadera() {
     const area = parseFloat(document.getElementById('areaCasaMadera').value);
@@ -438,9 +438,9 @@ function calcularCasaMadera() {
     const banos = parseInt(document.getElementById('banosMadera').value);
 
     return {
-        madera: Math.ceil(area * 0.6),
-        cemento: Math.ceil(area * 0.3),
-        pintura: Math.ceil(area * 0.1),
+        madera: Math.ceil(area * 0.7),
+        cemento: Math.ceil(area * 0.25),
+        pintura: Math.ceil(area * 0.15),
         ventanas: Math.ceil(habitaciones * 1.2),
         puertas: habitaciones + banos + 2,
         inodoros: banos,
@@ -451,14 +451,15 @@ function calcularCasaMadera() {
         cable_electrico: Math.ceil(area * 1.5),
         tuberia_agua: Math.ceil(area * 1),
         tuberia_drenaje: Math.ceil(area * 0.6),
-        materialesExtra: {
-            rejas: habitaciones + banos + 10,
-            cerraduras: habitaciones + banos + 15,
-            iluminacion: habitaciones + banos + 20,
+        materialesAdicionales: {
+            rejas: habitaciones + banos + 8,
+            cerraduras: habitaciones + banos + 12,
+            iluminacion: habitaciones + banos + 18,
             ventilacion: habitaciones + banos + 25
         }
     };
 }
+
 
 function calcularCasaCemento() {
     const area = parseFloat(document.getElementById('areaCasaCemento').value);
@@ -466,41 +467,10 @@ function calcularCasaCemento() {
     const banos = parseInt(document.getElementById('banosCemento').value);
 
     return {
-        cemento: Math.ceil(area * 0.7),
-        arena: Math.ceil(area * 0.35),
-        grava: Math.ceil(area * 0.35),
-        varillas_acero: Math.ceil(area * 8),
-        pintura: Math.ceil(area * 0.25),
-        ventanas: Math.ceil(habitaciones * 1.5),
-        puertas: habitaciones + banos + 2,
-        inodoros: banos,
-        lavamanos: banos,
-        duchas: banos,
-        enchufes: Math.ceil((habitaciones * 4) + (banos * 2) + 10),
-        interruptores: Math.ceil(habitaciones + banos + 5),
-        cable_electrico: Math.ceil(area * 2.5),
-        tuberia_agua: Math.ceil(area * 1.5),
-        tuberia_drenaje: Math.ceil(area * 1),
-        materialesExtra: {
-            rejas: habitaciones + banos + 12,
-            cerraduras: habitaciones + banos + 18,
-            iluminacion: habitaciones + banos + 22,
-            ventilacion: habitaciones + banos + 28
-        }
-    };
-}
-
-function calcularCasaLadrillo() {
-    const area = parseFloat(document.getElementById('areaCasaLadrillo').value);
-    const habitaciones = parseInt(document.getElementById('habitacionesLadrillo').value);
-    const banos = parseInt(document.getElementById('banosLadrillo').value);
-
-    return {
-        ladrillos: Math.ceil(area * 60),
-        cemento: Math.ceil(area * 0.5),
+        cemento: Math.ceil(area * 0.6),
         arena: Math.ceil(area * 0.3),
-        grava: Math.ceil(area * 0.3),
-        varillas_acero: Math.ceil(area * 7),
+        grava: Math.ceil(area * 0.25),
+        varillas_acero: Math.ceil(area * 6),
         pintura: Math.ceil(area * 0.2),
         ventanas: Math.ceil(habitaciones * 1.5),
         puertas: habitaciones + banos + 2,
@@ -512,10 +482,43 @@ function calcularCasaLadrillo() {
         cable_electrico: Math.ceil(area * 2.5),
         tuberia_agua: Math.ceil(area * 1.5),
         tuberia_drenaje: Math.ceil(area * 1),
-        materialesExtra: {
-            rejas: habitaciones + banos + 15,
-            cerraduras: habitaciones + banos + 20,
-            iluminacion: habitaciones + banos + 25,
+        materialesAdicionales: {
+            rejas: habitaciones + banos + 10,
+            cerraduras: habitaciones + banos + 15,
+            iluminacion: habitaciones + banos + 20,
+            ventilacion: habitaciones + banos + 28
+        }
+    };
+}
+
+
+
+function calcularCasaLadrillo() {
+    const area = parseFloat(document.getElementById('areaCasaLadrillo').value);
+    const habitaciones = parseInt(document.getElementById('habitacionesLadrillo').value);
+    const banos = parseInt(document.getElementById('banosLadrillo').value);
+
+    return {
+        ladrillos: Math.ceil(area * 50),
+        cemento: Math.ceil(area * 0.4),
+        arena: Math.ceil(area * 0.25),
+        grava: Math.ceil(area * 0.25),
+        varillas_acero: Math.ceil(area * 5),
+        pintura: Math.ceil(area * 0.15),
+        ventanas: Math.ceil(habitaciones * 1.5),
+        puertas: habitaciones + banos + 2,
+        inodoros: banos,
+        lavamanos: banos,
+        duchas: banos,
+        enchufes: Math.ceil((habitaciones * 4) + (banos * 2) + 10),
+        interruptores: Math.ceil(habitaciones + banos + 5),
+        cable_electrico: Math.ceil(area * 2.5),
+        tuberia_agua: Math.ceil(area * 1.5),
+        tuberia_drenaje: Math.ceil(area * 1),
+        materialesAdicionales: {
+            rejas: habitaciones + banos + 12,
+            cerraduras: habitaciones + banos + 18,
+            iluminacion: habitaciones + banos + 22,
             ventilacion: habitaciones + banos + 30
         }
     };
@@ -528,8 +531,8 @@ function calcularCasaPrefabricada() {
 
     return {
         prefabricados: Math.ceil(area * 0.7),
-        cemento: Math.ceil(area * 0.2),
-        pintura: Math.ceil(area * 0.1),
+        cemento: Math.ceil(area * 0.25),
+        pintura: Math.ceil(area * 0.05),
         ventanas: Math.ceil(habitaciones * 1.2),
         puertas: habitaciones + banos + 2,
         inodoros: banos,
@@ -537,13 +540,13 @@ function calcularCasaPrefabricada() {
         duchas: banos,
         enchufes: Math.ceil((habitaciones * 3) + (banos * 2) + 8),
         interruptores: Math.ceil(habitaciones + banos + 4),
-        cable_electrico: Math.ceil(area * 1.5),
+        cable_electrico: Math.ceil(area * 1.3),
         tuberia_agua: Math.ceil(area * 1),
         tuberia_drenaje: Math.ceil(area * 0.6),
-        materialesExtra: {
-            rejas: habitaciones + banos + 10,
-            cerraduras: habitaciones + banos + 15,
-            iluminacion: habitaciones + banos + 20,
+        materialesAdicionales: {
+            rejas: habitaciones + banos + 8,
+            cerraduras: habitaciones + banos + 12,
+            iluminacion: habitaciones + banos + 18,
             ventilacion: habitaciones + banos + 25
         }
     };
@@ -555,9 +558,9 @@ function calcularCasaAdobe() {
     const banos = parseInt(document.getElementById('banosAdobe').value);
 
     return {
-        adobe: Math.ceil(area * 0.6),
-        cemento: Math.ceil(area * 0.2),
-        pintura: Math.ceil(area * 0.1),
+        adobe: Math.ceil(area * 0.5),
+        cemento: Math.ceil(area * 0.3),
+        pintura: Math.ceil(area * 0.15),
         ventanas: Math.ceil(habitaciones * 1.2),
         puertas: habitaciones + banos + 2,
         inodoros: banos,
@@ -565,13 +568,13 @@ function calcularCasaAdobe() {
         duchas: banos,
         enchufes: Math.ceil((habitaciones * 3) + (banos * 2) + 8),
         interruptores: Math.ceil(habitaciones + banos + 4),
-        cable_electrico: Math.ceil(area * 1.5),
+        cable_electrico: Math.ceil(area * 1.3),
         tuberia_agua: Math.ceil(area * 1),
         tuberia_drenaje: Math.ceil(area * 0.6),
-        materialesExtra: {
-            rejas: habitaciones + banos + 12,
-            cerraduras: habitaciones + banos + 18,
-            iluminacion: habitaciones + banos + 24,
+        materialesAdicionales: {
+            rejas: habitaciones + banos + 10,
+            cerraduras: habitaciones + banos + 15,
+            iluminacion: habitaciones + banos + 20,
             ventilacion: habitaciones + banos + 30
         }
     };
@@ -584,8 +587,8 @@ function calcularCasaSustentable() {
 
     return {
         paneles_solares: Math.ceil(area * 0.1),
-        sistema_recolecta_agua: Math.ceil(area * 0.05),
-        materiales_ecologicos: Math.ceil(area * 0.4),
+        sistema_recolecta_agua: Math.ceil(area * 0.1),
+        materiales_ecologicos: Math.ceil(area * 0.3),
         ventanas: Math.ceil(habitaciones * 1.2),
         puertas: habitaciones + banos + 2,
         inodoros: banos,
@@ -596,10 +599,10 @@ function calcularCasaSustentable() {
         cable_electrico: Math.ceil(area * 1.5),
         tuberia_agua: Math.ceil(area * 1),
         tuberia_drenaje: Math.ceil(area * 0.6),
-        materialesExtra: {
-            rejas: habitaciones + banos + 15,
-            cerraduras: habitaciones + banos + 22,
-            iluminacion: habitaciones + banos + 30,
+        materialesAdicionales: {
+            rejas: habitaciones + banos + 12,
+            cerraduras: habitaciones + banos + 18,
+            iluminacion: habitaciones + banos + 25,
             ventilacion: habitaciones + banos + 35
         }
     };

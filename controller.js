@@ -79,9 +79,9 @@ function generateCalculator(type) {
     switch (type) {
         case 'Casa Moderna':
             calculatorHTML += `
-                <input type="number" id="areaCasaModerna" placeholder="Área total (m²)" required>
-                <input type="number" id="habitacionesModerna" placeholder="Número de habitaciones" required>
-                <input type="number" id="banosModerna" placeholder="Número de baños" required>
+                <input type="number" id="areaCasaModerna" placeholder="Área total (m²)" required min="10" max="500">
+                <input type="number" id="habitacionesModerna" placeholder="Número de habitaciones" required min="1" max="10">
+                <input type="number" id="banosModerna" placeholder="Número de baños" required min="1" max="6">
                 <select id="materialPrincipalModerna" required>
                     <option value="">Seleccione el material principal</option>
                     <option value="ladrillo">Ladrillo</option>
@@ -92,15 +92,15 @@ function generateCalculator(type) {
                     <option value="teja">Teja</option>
                     <option value="metalico">Metálico</option>
                 </select>
-                <input type="number" id="altoCasaModerna" placeholder="Altura de la casa (m)" required>
-                <input type="number" id="anchoParedesModerna" placeholder="Ancho de las paredes (m)" required>
-                <input type="number" id="profundidadCasaModerna" placeholder="Profundidad de la casa (m)" required>
+                <input type="number" id="altoCasaModerna" placeholder="Altura de la casa (m)" required min="2" max="5">
+                <input type="number" id="anchoParedesModerna" placeholder="Ancho de las paredes (m)" required min="0.1" max="0.5">
+                <input type="number" id="profundidadCasaModerna" placeholder="Profundidad de la casa (m)" required min="5" max="30">
                 <select id="tipoPisoModerna" required>
                     <option value="">Seleccione el tipo de piso</option>
                     <option value="concreto">Concreto</option>
                     <option value="mosaico">Mosaico</option>
                 </select>
-            `;
+           `;
             break;
         case 'Casa de Campo':
             calculatorHTML += `
@@ -113,14 +113,14 @@ function generateCalculator(type) {
                     <option value="piedra">Piedra</option>
                     <option value="ladrillo">Ladrillo</option>
                 </select>
-                <input type="number" id="altoCasaCampo" placeholder="Altura de la casa (m)" required>
-                <input type="number" id="anchoParedesCampo" placeholder="Ancho de las paredes (m)" required>
-                <input type="number" id="profundidadCasaCampo" placeholder="Profundidad de la casa (m)" required>
+                <input type="number" id="altoCasaCampo" placeholder="Altura de la casa (m)" required min="2" max="4">
+                <input type="number" id="anchoParedesCampo" placeholder="Ancho de las paredes (m)" required min="0.1" max="0.6">
+                <input type="number" id="profundidadCasaCampo" placeholder="Profundidad de la casa (m)" required min="5" max="40">
                 <select id="tipoCoberturaCampo" required>
                     <option value="">Seleccione el tipo de cobertura</option>
                     <option value="teja">Teja</option>
                     <option value="telgopor">Telgopor</option>
-                </select>
+                 </select>
                 <input type="number" id="altoMuroPerimetral" placeholder="Altura del muro perimetral (m)" required>
                 <input type="number" id="anchoFoso" placeholder="Ancho del foso (m)" required>
             `;
@@ -136,14 +136,14 @@ function generateCalculator(type) {
                     <option value="roble">Roble</option>
                     <option value="cedro">Cedro</option>
                 </select>
-                <input type="number" id="altoCasaMadera" placeholder="Altura de la casa (m)" required>
-                <input type="number" id="anchoParedesMadera" placeholder="Ancho de las paredes (m)" required>
-                <input type="number" id="profundidadCasaMadera" placeholder="Profundidad de la casa (m)" required>
+                <input type="number" id="altoCasaMadera" placeholder="Altura de la casa (m)" required min="2" max="3">
+                <input type="number" id="anchoParedesMadera" placeholder="Ancho de las paredes (m)" required min="0.1" max="0.4">
+                <input type="number" id="profundidadCasaMadera" placeholder="Profundidad de la casa (m)" required min="4" max="25">
                 <select id="tipoTechoMadera" required>
                     <option value="">Seleccione el tipo de techo</option>
                     <option value="teja">Teja</option>
                     <option value="metalico">Metálico</option>
-                </select>
+                 </select>
                 <input type="number" id="altoPisoMadera" placeholder="Altura del piso (m)" required>
                 <input type="number" id="espesorTablas" placeholder="Espesor de las tablas (cm)" required>
             `;
@@ -159,14 +159,14 @@ function generateCalculator(type) {
                     <option value="aluminoso">Aluminoso</option>
                     <option value="blanco">Blanco</option>
                 </select>
-                <input type="number" id="altoCasaCemento" placeholder="Altura de la casa (m)" required>
-                <input type="number" id="anchoParedesCemento" placeholder="Ancho de las paredes (m)" required>
-                <input type="number" id="profundidadCasaCemento" placeholder="Profundidad de la casa (m)" required>
+                <input type="number" id="altoCasaCemento" placeholder="Altura de la casa (m)" required min="2" max="6">
+                <input type="number" id="anchoParedesCemento" placeholder="Ancho de las paredes (m)" required min="0.1" max="0.8">
+                <input type="number" id="profundidadCasaCemento" placeholder="Profundidad de la casa (m)" required min="10" max="40">
                 <select id="tipoIluminacion" required>
                     <option value="">Seleccione el tipo de iluminación</option>
                     <option value="natural">Natural</option>
                     <option value="artificial">Artificial</option>
-                </select>
+                </select>   
                 <input type="number" id="altoVentanas" placeholder="Altura de las ventanas (cm)" required>
             `;
             break;
@@ -181,14 +181,14 @@ function generateCalculator(type) {
                     <option value="hueco">Hueco</option>
                     <option value="refractario">Refractario</option>
                 </select>
-                <input type="number" id="altoCasaLadrillo" placeholder="Altura de la casa (m)" required>
-                <input type="number" id="anchoParedesLadrillo" placeholder="Ancho de las paredes (m)" required>
-                <input type="number" id="profundidadCasaLadrillo" placeholder="Profundidad de la casa (m)" required>
+                <input type="number" id="altoCasaLadrillo" placeholder="Altura de la casa (m)" required min="2" max="5">
+                <input type="number" id="anchoParedesLadrillo" placeholder="Ancho de las paredes (m)" required min="0.1" max="0.7">
+                <input type="number" id="profundidadCasaLadrillo" placeholder="Profundidad de la casa (m)" required min="10" max="35">
                 <select id="tipoDiseño" required>
                     <option value="">Seleccione el tipo de diseño</option>
                     <option value="moderno">Moderno</option>
                     <option value="clásico">Clásico</option>
-                    <option value="minimalista">Minimalista</option>
+                   <option value="minimalista">Minimalista</option>
                 </select>
                 <input type="number" id="altoSistemaEnergiaSolar" placeholder="Altura del sistema de energía solar (cm)" required>
             `;
@@ -204,14 +204,14 @@ function generateCalculator(type) {
                     <option value="paneles">Paneles</option>
                     <option value="contenedor">Contenedor</option>
                 </select>
-                <input type="number" id="altoCasaPrefabricada" placeholder="Altura de la casa (m)" required>
-                <input type="number" id="anchoParedesPrefabricada" placeholder="Ancho de las paredes (m)" required>
-                <input type="number" id="profundidadCasaPrefabricada" placeholder="Profundidad de la casa (m)" required>
+                <input type="number" id="altoCasaPrefabricada" placeholder="Altura de la casa (m)" required min="2" max="4">
+                <input type="number" id="anchoParedesPrefabricada" placeholder="Ancho de las paredes (m)" required min="0.1" max="0.6">
+                <input type="number" id="profundidadCasaPrefabricada" placeholder="Profundidad de la casa (m)" required min="5" max="20">
                 <select id="tipoSistemaEnergiaRenovable" required>
                     <option value="">Seleccione el tipo de sistema energía renovable</option>
                     <option value="solar">Solar</option>
                     <option value="eólico">Eólico</option>
-                    <option value="hidráulico">Hidráulico</option>
+                    <option value="hidráulico">Hidráulico</option> 
                 </select>
                 <input type="number" id="altoSistemaEnergiaRenovable" placeholder="Altura del sistema de energía renovable (cm)" required>
             `;
@@ -227,14 +227,14 @@ function generateCalculator(type) {
                     <option value="estabilizado">Estabilizado</option>
                     <option value="comprimido">Comprimido</option>
                 </select>
-                <input type="number" id="altoCasaAdobe" placeholder="Altura de la casa (m)" required>
-                <input type="number" id="anchoParedesAdobe" placeholder="Ancho de las paredes (m)" required>
-                <input type="number" id="profundidadCasaAdobe" placeholder="Profundidad de la casa (m)" required>
+                <input type="number" id="altoCasaAdobe" placeholder="Altura de la casa (m)" required min="2" max="3">
+                <input type="number" id="anchoParedesAdobe" placeholder="Ancho de las paredes (m)" required min="0.2" max="0.8">
+                <input type="number" id="profundidadCasaAdobe" placeholder="Profundidad de la casa (m)" required min="5" max="25">
                 <select id="tipoSistemaIrrigación" required>
                     <option value="">Seleccione el tipo de sistema irrigación</option>
                     <option value="aspersión">Aspersión</option>
                     <option value="goteo">Goteo</option>
-                    <option value="riego superficial">Riego superficial</option>
+                  <option value="riego superficial">Riego superficial</option>
                 </select>
             `;
             break;
@@ -249,14 +249,14 @@ function generateCalculator(type) {
                     <option value="paja">Paja</option>
                     <option value="reciclado">Material Reciclado</option>
                 </select>
-                <input type="number" id="altoCasaSustentable" placeholder="Altura de la casa (m)" required>
-                <input type="number" id="anchoParedesSustentable" placeholder="Ancho de las paredes (m)" required>
-                <input type="number" id="profundidadCasaSustentable" placeholder="Profundidad de la casa (m)" required>
+                <input type="number" id="altoCasaSustentable" placeholder="Altura de la casa (m)" required min="2" max="4">
+                <input type="number" id="anchoParedesSustentable" placeholder="Ancho de las paredes (m)" required min="0.1" max="0.5">
+                <input type="number" id="profundidadCasaSustentable" placeholder="Profundidad de la casa (m)" required min="5" max="30">
                 <select id="sistemaEnergiaRenovable" required>
                     <option value="">Seleccione el sistema energía renovable</option>
                     <option value="solar">Solar</option>
                     <option value="eólico">Eólico</option>
-                    <option value="hidráulico">Hidráulico</option>
+                     <option value="hidráulico">Hidráulico</option>
                 </select>
             `;
             break;

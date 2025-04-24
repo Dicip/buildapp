@@ -110,7 +110,7 @@
     color: var(--primary-color);
     margin: 0.5em 0;
     font-size: 1.5em;
-    position: relative;
+    text-align: center;
     z-index: 1;
   }
   

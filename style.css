@@ -12,6 +12,7 @@
   }
   
   
+  
   body, html {
     font-family: 'Roboto', sans-serif;
     background-color: var(--background-color);
@@ -90,15 +91,31 @@
   }
   
   .construction-type:hover {
-    transform: translateY(-10px);
+    transform: translateY(-10px) rotate(2deg);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
   }
   
-  .construction-icon {
-    width: 150px;
-    height: 150px;
-    margin-bottom: 1.5em;
-    transition: transform 0.3s ease;
+  @media (max-width: 600px) {
+      .construction-icon {
+          width: 80px;
+          height: auto;
+      }
+  }
+  
+  @media (min-width: 601px) and (max-width: 1200px) {
+      .construction-icon {
+          width: 120px;
+          height: auto;
+      }
+  }
+  
+  @media (min-width: 1201px) {
+      .construction-icon {
+          width: 150px;
+          height: auto;
+      }
     position: relative;
+    transition: transform 0.3s ease;
     z-index: 1;
   }
   

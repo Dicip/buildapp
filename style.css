@@ -94,8 +94,8 @@
   }
   
   .construction-icon {
-    width: 80px;
-    height: 80px;
+    width: 150px;
+    height: 150px;
     margin-bottom: 1.5em;
     transition: transform 0.3s ease;
     position: relative;

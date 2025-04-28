@@ -262,6 +262,7 @@ h2 {
   align-items: center;
 }
 
+
 #result .material-name {
   font-weight: 500;
   color: var(--text-color);
@@ -328,4 +329,15 @@ h2 {
 .footer span {
   font-size: 1.2em;
   margin-left: 10px;
+}
+
+body button {
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
 }

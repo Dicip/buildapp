@@ -334,9 +334,9 @@ h2 {
 body button {
     padding: 10px;
     margin: 10px;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: white;
+    border-radius: 5px;    
+    background-color: #000;
+    color: #fff;
     border: none;
     cursor: pointer;
 }

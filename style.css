@@ -28,7 +28,7 @@ body, html {
   position: relative;
   overflow: hidden;
   width: auto;
-  height: 200px;
+  height: 150px;
 }
 
 .header::before {

@@ -87,14 +87,6 @@ nav a:hover {
   color: #fff;
 }
 
-nav a::after {
-  content: '';
-  
-  
-
-
-
-}
 nav a:hover {
   color: #ffdd00;
 }

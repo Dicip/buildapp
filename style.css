@@ -234,7 +234,7 @@ h2{
   margin: 5% auto;
   padding: 40px;
   border: none;
-  width: 90%;
+  width: 450px; 
   box-shadow: 0 15px 50px rgba(0,0,0,0.1);
   position: relative;
   animation: modalFadeIn 0.5s;
@@ -265,6 +265,14 @@ h2{
   # Calculator Styles
 \*------------------------------------*/
 
+.calculator {
+    background-color: black;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 10px;
+}
+
 #calculatorContainer {
     background-color: white;
     padding: 25px;
@@ -277,7 +285,7 @@ h2{
     /*
     Estilos de inputs
     */
-    width: 200px;
+    width: 300px;
     padding: 12px 25px;
   margin: 10px auto;
   display: block;

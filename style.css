@@ -82,14 +82,11 @@ nav a {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-nav a:hover {
+nav a:hover{
   background-color: #000;
-  color: #fff;
+  color: #ffdd00; 
 }
 
-nav a:hover {
-  color: #ffdd00;
-}
 nav a::after {
   content: '';
   position: absolute;

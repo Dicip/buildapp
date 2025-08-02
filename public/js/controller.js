@@ -1,3 +1,25 @@
+// Cargar coeficientes desde JSON
+let coeficientes = {};
+
+fetch('js/coeficientes.json')
+    .then(response => response.json())
+    .then(data => {
+        coeficientes = data;
+    })
+    .catch(error => {
+        console.error('Error cargando coeficientes:', error);
+        // Valores por defecto en caso de error
+        coeficientes = {
+            factorDesperdicio: 1.1,
+            sistemas: {},
+            instalaciones: {
+                electricas: { enchufes_por_habitacion: 4, enchufes_por_bano: 2, enchufes_comunes: 8 },
+                sanitarias: { inodoros_por_bano: 1, lavamanos_por_bano: 1, duchas_por_bano: 1 },
+                aberturas: { ventanas_por_habitacion: 1.5, puertas_interiores_por_habitacion: 1, puertas_por_bano: 1 }
+            }
+        };
+    });
+
 document.addEventListener('DOMContentLoaded', function () {
     const modal = document.getElementById("myModal");
     const span = document.getElementsByClassName("close")[0];
@@ -40,32 +62,26 @@ function calcularMateriales(tipo) {
     }
 
     switch (tipo) {
-        case 'Casa Moderna':
-            materiales = calcularCasaModerna();
+        case 'Albañilería Confinada':
+            materiales = calcularAlbanileriaConfinada();
             break;
-        case 'Casa de Campo':
-            materiales = calcularCasaCampo();
+        case 'Hormigón Armado':
+            materiales = calcularHormigonArmado();
             break;
-        case 'Casa de Madera':
-            materiales = calcularCasaMadera();
+        case 'Madera':
+            materiales = calcularMadera();
             break;
-        case 'Casa de Cemento':
-            materiales = calcularCasaCemento();
+        case 'Steel Framing':
+            materiales = calcularSteelFraming();
             break;
-        case 'Casa de Ladrillo':
-            materiales = calcularCasaLadrillo();
+        case 'Prefabricada':
+            materiales = calcularPrefabricada();
             break;
-        case 'Casa Prefabricada':
-            materiales = calcularCasaPrefabricada();
-            break;
-        case 'Casa de Adobe':
-            materiales = calcularCasaAdobe();
-            break;
-        case 'Casa Sustentable':
-            materiales = calcularCasaSustentable();
+        case 'Adobe':
+            materiales = calcularAdobe();
             break;
         default:
-            alert('Tipo de casa no reconocido.');
+            alert('Tipo de construcción no reconocido.');
             return;
     }
 
@@ -77,186 +93,252 @@ function generateCalculator(type) {
     let calculatorHTML = '';
 
     switch (type) {
-        case 'Casa Moderna':
+        case 'Albañilería Confinada':
             calculatorHTML += `
-                <input type="number" id="areaCasaModerna" placeholder="Área total (m²)" required min="10" max="500">
-                <input type="number" id="habitacionesModerna" placeholder="Número de habitaciones" required min="1" max="10">
-                <input type="number" id="banosModerna" placeholder="Número de baños" required min="1" max="6">
-                <select id="materialPrincipalModerna" required>
-                    <option value="">Seleccione el material principal</option>
-                    <option value="ladrillo">Ladrillo</option>
-                    <option value="madera">Madera</option>
-                </select>
-                <select id="tipoTechoModerna" required>
-                    <option value="">Seleccione el tipo de techo</option>
-                    <option value="teja">Teja</option>
-                    <option value="metalico">Metálico</option>
-                </select>
-                <input type="number" id="altoCasaModerna" placeholder="Altura de la casa (m)" required min="2" max="5">
-                <input type="number" id="anchoParedesModerna" placeholder="Ancho de las paredes (m)" required min="0.1" max="0.5">
-                <input type="number" id="profundidadCasaModerna" placeholder="Profundidad de la casa (m)" required min="5" max="30">
-                <select id="tipoPisoModerna" required>
-                    <option value="">Seleccione el tipo de piso</option>
-                    <option value="concreto">Concreto</option>
-                    <option value="mosaico">Mosaico</option>
-                </select>
-           `;
-            break;
-        case 'Casa de Campo':
-            calculatorHTML += `
-                <input type="number" id="areaCasaCampo" placeholder="Área total (m²)" required>
-                <input type="number" id="habitacionesCampo" placeholder="Número de habitaciones" required>
-                <input type="number" id="banosCampo" placeholder="Número de baños" required>
-                <select id="materialPrincipalCampo" required>
-                    <option value="">Seleccione el material principal</option>
-                    <option value="madera">Madera</option>
-                    <option value="piedra">Piedra</option>
-                    <option value="ladrillo">Ladrillo</option>
-                </select>
-                <input type="number" id="altoCasaCampo" placeholder="Altura de la casa (m)" required min="2" max="4">
-                <input type="number" id="anchoParedesCampo" placeholder="Ancho de las paredes (m)" required min="0.1" max="0.6">
-                <input type="number" id="profundidadCasaCampo" placeholder="Profundidad de la casa (m)" required min="5" max="40">
-                <select id="tipoCoberturaCampo" required>
-                    <option value="">Seleccione el tipo de cobertura</option>
-                    <option value="teja">Teja</option>
-                    <option value="telgopor">Telgopor</option>
-                 </select>
-                <input type="number" id="altoMuroPerimetral" placeholder="Altura del muro perimetral (m)" required>
-                <input type="number" id="anchoFoso" placeholder="Ancho del foso (m)" required>
-            `;
-            break;
-        case 'Casa de Madera':
-            calculatorHTML += `
-                <input type="number" id="areaCasaMadera" placeholder="Área total (m²)" required>
-                <input type="number" id="habitacionesMadera" placeholder="Número de habitaciones" required>
-                <input type="number" id="banosMadera" placeholder="Número de baños" required>
-                <select id="tipoMadera" required>
-                    <option value="">Seleccione el tipo de madera</option>
-                    <option value="pino">Pino</option>
-                    <option value="roble">Roble</option>
-                    <option value="cedro">Cedro</option>
-                </select>
-                <input type="number" id="altoCasaMadera" placeholder="Altura de la casa (m)" required min="2" max="3">
-                <input type="number" id="anchoParedesMadera" placeholder="Ancho de las paredes (m)" required min="0.1" max="0.4">
-                <input type="number" id="profundidadCasaMadera" placeholder="Profundidad de la casa (m)" required min="4" max="25">
-                <select id="tipoTechoMadera" required>
-                    <option value="">Seleccione el tipo de techo</option>
-                    <option value="teja">Teja</option>
-                    <option value="metalico">Metálico</option>
-                 </select>
-                <input type="number" id="altoPisoMadera" placeholder="Altura del piso (m)" required>
-                <input type="number" id="espesorTablas" placeholder="Espesor de las tablas (cm)" required>
-            `;
-            break;
-        case 'Casa de Cemento':
-            calculatorHTML += `
-                <input type="number" id="areaCasaCemento" placeholder="Área total (m²)" required>
-                <input type="number" id="habitacionesCemento" placeholder="Número de habitaciones" required>
-                <input type="number" id="banosCemento" placeholder="Número de baños" required>
-                <select id="tipoCemento" required>
-                    <option value="">Seleccione el tipo de cemento</option>
-                    <option value="portland">Portland</option>
-                    <option value="aluminoso">Aluminoso</option>
-                    <option value="blanco">Blanco</option>
-                </select>
-                <input type="number" id="altoCasaCemento" placeholder="Altura de la casa (m)" required min="2" max="6">
-                <input type="number" id="anchoParedesCemento" placeholder="Ancho de las paredes (m)" required min="0.1" max="0.8">
-                <input type="number" id="profundidadCasaCemento" placeholder="Profundidad de la casa (m)" required min="10" max="40">
-                <select id="tipoIluminacion" required>
-                    <option value="">Seleccione el tipo de iluminación</option>
-                    <option value="natural">Natural</option>
-                    <option value="artificial">Artificial</option>
-                </select>   
-                <input type="number" id="altoVentanas" placeholder="Altura de las ventanas (cm)" required>
-            `;
-            break;
-        case 'Casa de Ladrillo':
-            calculatorHTML += `
-                <input type="number" id="areaCasaLadrillo" placeholder="Área total (m²)" required>
-                <input type="number" id="habitacionesLadrillo" placeholder="Número de habitaciones" required>
-                <input type="number" id="banosLadrillo" placeholder="Número de baños" required>
+                <h3>🧱 Especificaciones del Sistema</h3>
+                <input type="number" id="areaTotal" placeholder="Área total construida (m²)" required min="30" max="500" step="0.1">
+                <input type="number" id="largo" placeholder="Largo de la construcción (m)" required min="5" max="30" step="0.1">
+                <input type="number" id="ancho" placeholder="Ancho de la construcción (m)" required min="4" max="20" step="0.1">
+                <input type="number" id="altura" placeholder="Altura promedio (m)" required min="2.4" max="4" step="0.1" value="2.6">
+                
+                <h3>🏠 Distribución</h3>
+                <input type="number" id="habitaciones" placeholder="Número de habitaciones" required min="1" max="8">
+                <input type="number" id="banos" placeholder="Número de baños" required min="1" max="6">
+                
+                <h3>🧱 Albañilería Confinada</h3>
                 <select id="tipoLadrillo" required>
-                    <option value="">Seleccione el tipo de ladrillo</option>
-                    <option value="comun">Común</option>
-                    <option value="hueco">Hueco</option>
-                    <option value="refractario">Refractario</option>
+                    <option value="">Tipo de ladrillo</option>
+                    <option value="ceramico">Ladrillo Cerámico</option>
+                    <option value="tierra_cocida">Ladrillo de Tierra Cocida</option>
+                    <option value="bloque_ceramico">Bloque Cerámico</option>
                 </select>
-                <input type="number" id="altoCasaLadrillo" placeholder="Altura de la casa (m)" required min="2" max="5">
-                <input type="number" id="anchoParedesLadrillo" placeholder="Ancho de las paredes (m)" required min="0.1" max="0.7">
-                <input type="number" id="profundidadCasaLadrillo" placeholder="Profundidad de la casa (m)" required min="10" max="35">
-                <select id="tipoDiseño" required>
-                    <option value="">Seleccione el tipo de diseño</option>
-                    <option value="moderno">Moderno</option>
-                    <option value="clásico">Clásico</option>
-                   <option value="minimalista">Minimalista</option>
+                <input type="number" id="espesorMuro" placeholder="Espesor del muro (cm)" required min="14" max="25" value="15">
+                <select id="tipoMortero" required>
+                    <option value="">Tipo de mortero</option>
+                    <option value="1_3">Cemento:Arena 1:3</option>
+                    <option value="1_4">Cemento:Arena 1:4</option>
                 </select>
-                <input type="number" id="altoSistemaEnergiaSolar" placeholder="Altura del sistema de energía solar (cm)" required>
+                
+                <h3>🌍 Condiciones del Sitio</h3>
+                <select id="zonaClimatica" required>
+                    <option value="">Zona climática</option>
+                    <option value="norte">Norte (Arica-Antofagasta)</option>
+                    <option value="centro">Centro (Valparaíso-O'Higgins)</option>
+                    <option value="sur">Sur (Araucanía-Los Ríos)</option>
+                </select>
+                <select id="zonaSismica" required>
+                     <option value="">Zona sísmica</option>
+                     <option value="zona1">Zona 1 (Baja sismicidad)</option>
+                     <option value="zona2">Zona 2 (Sismicidad intermedia)</option>
+                     <option value="zona3">Zona 3 (Alta sismicidad)</option>
+                 </select>
             `;
             break;
-        case 'Casa Prefabricada':
+        case 'Hormigón Armado':
             calculatorHTML += `
-                <input type="number" id="areaCasaPrefabricada" placeholder="Área total (m²)" required>
-                <input type="number" id="habitacionesPrefabricada" placeholder="Número de habitaciones" required>
-                <input type="number" id="banosPrefabricada" placeholder="Número de baños" required>
-                <select id="tipoPrefabricada" required>
-                    <option value="">Seleccione el tipo de prefabricada</option>
-                    <option value="modular">Modular</option>
-                    <option value="paneles">Paneles</option>
-                    <option value="contenedor">Contenedor</option>
+                <h3>🏗️ Especificaciones del Sistema</h3>
+                <input type="number" id="areaTotal" placeholder="Área total construida (m²)" required min="30" max="500" step="0.1">
+                <input type="number" id="largo" placeholder="Largo de la construcción (m)" required min="5" max="30" step="0.1">
+                <input type="number" id="ancho" placeholder="Ancho de la construcción (m)" required min="4" max="20" step="0.1">
+                <input type="number" id="altura" placeholder="Altura promedio (m)" required min="2.4" max="4" step="0.1" value="2.6">
+                
+                <h3>🏠 Distribución</h3>
+                <input type="number" id="habitaciones" placeholder="Número de habitaciones" required min="1" max="8">
+                <input type="number" id="banos" placeholder="Número de baños" required min="1" max="6">
+                
+                <h3>🏗️ Hormigón Armado</h3>
+                <select id="resistenciaHormigon" required>
+                    <option value="">Resistencia del hormigón</option>
+                    <option value="h20">H20 (200 kg/cm²)</option>
+                    <option value="h25">H25 (250 kg/cm²)</option>
+                    <option value="h30">H30 (300 kg/cm²)</option>
                 </select>
-                <input type="number" id="altoCasaPrefabricada" placeholder="Altura de la casa (m)" required min="2" max="4">
-                <input type="number" id="anchoParedesPrefabricada" placeholder="Ancho de las paredes (m)" required min="0.1" max="0.6">
-                <input type="number" id="profundidadCasaPrefabricada" placeholder="Profundidad de la casa (m)" required min="5" max="20">
-                <select id="tipoSistemaEnergiaRenovable" required>
-                    <option value="">Seleccione el tipo de sistema energía renovable</option>
-                    <option value="solar">Solar</option>
-                    <option value="eólico">Eólico</option>
-                    <option value="hidráulico">Hidráulico</option> 
+                <select id="tipoAcero" required>
+                    <option value="">Tipo de acero</option>
+                    <option value="a44_28h">A44-28H</option>
+                    <option value="a63_42h">A63-42H</option>
                 </select>
-                <input type="number" id="altoSistemaEnergiaRenovable" placeholder="Altura del sistema de energía renovable (cm)" required>
+                <input type="number" id="espesorLosa" placeholder="Espesor de losa (cm)" required min="12" max="25" value="15">
+                
+                <h3>🌍 Condiciones del Sitio</h3>
+                <select id="zonaClimatica" required>
+                    <option value="">Zona climática</option>
+                    <option value="norte">Norte (Arica-Antofagasta)</option>
+                    <option value="centro">Centro (Valparaíso-O'Higgins)</option>
+                    <option value="sur">Sur (Araucanía-Los Ríos)</option>
+                </select>
+                <select id="zonaSismica" required>
+                    <option value="">Zona sísmica</option>
+                    <option value="zona1">Zona 1 (Baja sismicidad)</option>
+                    <option value="zona2">Zona 2 (Sismicidad intermedia)</option>
+                    <option value="zona3">Zona 3 (Alta sismicidad)</option>
+                </select>
             `;
             break;
-        case 'Casa de Adobe':
+        case 'Madera':
             calculatorHTML += `
-                <input type="number" id="areaCasaAdobe" placeholder="Área total (m²)" required>
-                <input type="number" id="habitacionesAdobe" placeholder="Número de habitaciones" required>
-                <input type="number" id="banosAdobe" placeholder="Número de baños" required>
+                <h3>🌲 Especificaciones del Sistema</h3>
+                <input type="number" id="areaTotal" placeholder="Área total construida (m²)" required min="30" max="500" step="0.1">
+                <input type="number" id="largo" placeholder="Largo de la construcción (m)" required min="5" max="30" step="0.1">
+                <input type="number" id="ancho" placeholder="Ancho de la construcción (m)" required min="4" max="20" step="0.1">
+                <input type="number" id="altura" placeholder="Altura promedio (m)" required min="2.4" max="4" step="0.1" value="2.6">
+                
+                <h3>🏠 Distribución</h3>
+                <input type="number" id="habitaciones" placeholder="Número de habitaciones" required min="1" max="8">
+                <input type="number" id="banos" placeholder="Número de baños" required min="1" max="6">
+                
+                <h3>🌲 Construcción en Madera</h3>
+                <select id="tipoMadera" required>
+                    <option value="">Tipo de madera</option>
+                    <option value="pino_radiata">Pino Radiata</option>
+                    <option value="roble">Roble</option>
+                    <option value="coigue">Coigüe</option>
+                </select>
+                <select id="sistemaConstructivo" required>
+                    <option value="">Sistema constructivo</option>
+                    <option value="entramado_2x4">Entramado 2x4"</option>
+                    <option value="entramado_2x6">Entramado 2x6"</option>
+                    <option value="paneles_clt">Paneles CLT</option>
+                </select>
+                <input type="number" id="humedadMadera" placeholder="Humedad de la madera (%)" required min="8" max="18" value="12">
+                
+                <h3>🌍 Condiciones del Sitio</h3>
+                <select id="zonaClimatica" required>
+                    <option value="">Zona climática</option>
+                    <option value="norte">Norte (Arica-Antofagasta)</option>
+                    <option value="centro">Centro (Valparaíso-O'Higgins)</option>
+                    <option value="sur">Sur (Araucanía-Los Ríos)</option>
+                </select>
+                <select id="zonaSismica" required>
+                    <option value="">Zona sísmica</option>
+                    <option value="zona1">Zona 1 (Baja sismicidad)</option>
+                    <option value="zona2">Zona 2 (Sismicidad intermedia)</option>
+                    <option value="zona3">Zona 3 (Alta sismicidad)</option>
+                </select>
+            `;
+            break;
+        case 'Steel Framing':
+            calculatorHTML += `
+                <h3>🔩 Especificaciones del Sistema</h3>
+                <input type="number" id="areaTotal" placeholder="Área total construida (m²)" required min="30" max="500" step="0.1">
+                <input type="number" id="largo" placeholder="Largo de la construcción (m)" required min="5" max="30" step="0.1">
+                <input type="number" id="ancho" placeholder="Ancho de la construcción (m)" required min="4" max="20" step="0.1">
+                <input type="number" id="altura" placeholder="Altura promedio (m)" required min="2.4" max="4" step="0.1" value="2.6">
+                
+                <h3>🏠 Distribución</h3>
+                <input type="number" id="habitaciones" placeholder="Número de habitaciones" required min="1" max="8">
+                <input type="number" id="banos" placeholder="Número de baños" required min="1" max="6">
+                
+                <h3>🔩 Steel Framing</h3>
+                <select id="espesorPerfil" required>
+                    <option value="">Espesor del perfil</option>
+                    <option value="0.6mm">0.6 mm</option>
+                    <option value="0.8mm">0.8 mm</option>
+                    <option value="1.0mm">1.0 mm</option>
+                    <option value="1.2mm">1.2 mm</option>
+                </select>
+                <select id="tipoAislante" required>
+                    <option value="">Tipo de aislante</option>
+                    <option value="lana_mineral">Lana Mineral</option>
+                    <option value="poliestireno">Poliestireno Expandido</option>
+                    <option value="poliuretano">Poliuretano</option>
+                </select>
+                <input type="number" id="espesorAislante" placeholder="Espesor del aislante (mm)" required min="50" max="150" value="100">
+                
+                <h3>🌍 Condiciones del Sitio</h3>
+                <select id="zonaClimatica" required>
+                    <option value="">Zona climática</option>
+                    <option value="norte">Norte (Arica-Antofagasta)</option>
+                    <option value="centro">Centro (Valparaíso-O'Higgins)</option>
+                    <option value="sur">Sur (Araucanía-Los Ríos)</option>
+                </select>
+                <select id="zonaSismica" required>
+                    <option value="">Zona sísmica</option>
+                    <option value="zona1">Zona 1 (Baja sismicidad)</option>
+                    <option value="zona2">Zona 2 (Sismicidad intermedia)</option>
+                    <option value="zona3">Zona 3 (Alta sismicidad)</option>
+                </select>
+            `;
+            break;
+        case 'Prefabricada':
+            calculatorHTML += `
+                <h3>🏭 Especificaciones del Sistema</h3>
+                <input type="number" id="areaTotal" placeholder="Área total construida (m²)" required min="30" max="500" step="0.1">
+                <input type="number" id="largo" placeholder="Largo de la construcción (m)" required min="5" max="30" step="0.1">
+                <input type="number" id="ancho" placeholder="Ancho de la construcción (m)" required min="4" max="20" step="0.1">
+                <input type="number" id="altura" placeholder="Altura promedio (m)" required min="2.4" max="4" step="0.1" value="2.6">
+                
+                <h3>🏠 Distribución</h3>
+                <input type="number" id="habitaciones" placeholder="Número de habitaciones" required min="1" max="8">
+                <input type="number" id="banos" placeholder="Número de baños" required min="1" max="6">
+                
+                <h3>🏭 Construcción Prefabricada</h3>
+                <select id="tipoPrefabricado" required>
+                    <option value="">Tipo de prefabricado</option>
+                    <option value="paneles_hormigon">Paneles de Hormigón</option>
+                    <option value="modulos_madera">Módulos de Madera</option>
+                    <option value="paneles_sip">Paneles SIP</option>
+                    <option value="contenedores">Contenedores Adaptados</option>
+                </select>
+                <select id="nivelTerminacion" required>
+                    <option value="">Nivel de terminación</option>
+                    <option value="basico">Básico</option>
+                    <option value="medio">Medio</option>
+                    <option value="alto">Alto</option>
+                </select>
+                
+                <h3>🌍 Condiciones del Sitio</h3>
+                <select id="zonaClimatica" required>
+                    <option value="">Zona climática</option>
+                    <option value="norte">Norte (Arica-Antofagasta)</option>
+                    <option value="centro">Centro (Valparaíso-O'Higgins)</option>
+                    <option value="sur">Sur (Araucanía-Los Ríos)</option>
+                </select>
+                <select id="zonaSismica" required>
+                    <option value="">Zona sísmica</option>
+                    <option value="zona1">Zona 1 (Baja sismicidad)</option>
+                    <option value="zona2">Zona 2 (Sismicidad intermedia)</option>
+                    <option value="zona3">Zona 3 (Alta sismicidad)</option>
+                </select>
+            `;
+            break;
+        case 'Adobe':
+            calculatorHTML += `
+                <h3>🏺 Especificaciones del Sistema</h3>
+                <input type="number" id="areaTotal" placeholder="Área total construida (m²)" required min="30" max="300" step="0.1">
+                <input type="number" id="largo" placeholder="Largo de la construcción (m)" required min="5" max="25" step="0.1">
+                <input type="number" id="ancho" placeholder="Ancho de la construcción (m)" required min="4" max="15" step="0.1">
+                <input type="number" id="altura" placeholder="Altura promedio (m)" required min="2.4" max="3.5" step="0.1" value="2.6">
+                
+                <h3>🏠 Distribución</h3>
+                <input type="number" id="habitaciones" placeholder="Número de habitaciones" required min="1" max="6">
+                <input type="number" id="banos" placeholder="Número de baños" required min="1" max="3">
+                
+                <h3>🏺 Construcción en Adobe</h3>
                 <select id="tipoAdobe" required>
-                    <option value="">Seleccione el tipo de adobe</option>
-                    <option value="tradicional">Tradicional</option>
-                    <option value="estabilizado">Estabilizado</option>
-                    <option value="comprimido">Comprimido</option>
+                    <option value="">Tipo de adobe</option>
+                    <option value="tradicional">Adobe Tradicional</option>
+                    <option value="estabilizado">Adobe Estabilizado</option>
+                    <option value="comprimido">Adobe Comprimido</option>
                 </select>
-                <input type="number" id="altoCasaAdobe" placeholder="Altura de la casa (m)" required min="2" max="3">
-                <input type="number" id="anchoParedesAdobe" placeholder="Ancho de las paredes (m)" required min="0.2" max="0.8">
-                <input type="number" id="profundidadCasaAdobe" placeholder="Profundidad de la casa (m)" required min="5" max="25">
-                <select id="tipoSistemaIrrigación" required>
-                    <option value="">Seleccione el tipo de sistema irrigación</option>
-                    <option value="aspersión">Aspersión</option>
-                    <option value="goteo">Goteo</option>
-                  <option value="riego superficial">Riego superficial</option>
+                <input type="number" id="espesorMuro" placeholder="Espesor del muro (cm)" required min="30" max="50" value="40">
+                <select id="tipoRevoque" required>
+                    <option value="">Tipo de revoque</option>
+                    <option value="barro_cal">Barro y Cal</option>
+                    <option value="cemento_cal">Cemento y Cal</option>
                 </select>
-            `;
-            break;
-        case 'Casa Sustentable':
-            calculatorHTML += `
-                <input type="number" id="areaCasaSustentable" placeholder="Área total (m²)" required>
-                <input type="number" id="habitacionesSustentable" placeholder="Número de habitaciones" required>
-                <input type="number" id="banosSustentable" placeholder="Número de baños" required>
-                <select id="materialSustentable" required>
-                    <option value="">Seleccione el material sustentable</option>
-                    <option value="bambu">Bambú</option>
-                    <option value="paja">Paja</option>
-                    <option value="reciclado">Material Reciclado</option>
+                
+                <h3>🌍 Condiciones del Sitio</h3>
+                <select id="zonaClimatica" required>
+                    <option value="">Zona climática</option>
+                    <option value="norte">Norte (Arica-Antofagasta)</option>
+                    <option value="centro">Centro (Valparaíso-O'Higgins)</option>
+                    <option value="sur">Sur (Araucanía-Los Ríos)</option>
                 </select>
-                <input type="number" id="altoCasaSustentable" placeholder="Altura de la casa (m)" required min="2" max="4">
-                <input type="number" id="anchoParedesSustentable" placeholder="Ancho de las paredes (m)" required min="0.1" max="0.5">
-                <input type="number" id="profundidadCasaSustentable" placeholder="Profundidad de la casa (m)" required min="5" max="30">
-                <select id="sistemaEnergiaRenovable" required>
-                    <option value="">Seleccione el sistema energía renovable</option>
-                    <option value="solar">Solar</option>
-                    <option value="eólico">Eólico</option>
-                     <option value="hidráulico">Hidráulico</option>
+                <select id="zonaSismica" required>
+                    <option value="">Zona sísmica</option>
+                    <option value="zona1">Zona 1 (Baja sismicidad)</option>
+                    <option value="zona2">Zona 2 (Sismicidad intermedia)</option>
                 </select>
             `;
             break;
@@ -298,28 +380,92 @@ function validarEntradas(tipo) {
 }
 
 function mostrarResultados(materiales) {
-    let resultadoHTML = '<h4>Materiales Estimados:</h4><ul>';
-    for (let material in materiales) {
-        // Exclude the 'materialesExtra' object from the main list if it exists
-        if (material !== 'materialesExtra' && materiales[material] > 0) {
-            let materialName = material.replace(/_/g, ' ');
-            resultadoHTML += `<li><span class="material-name">${materialName}</span> <span class="material-quantity">${materiales[material]} ${obtenerUnidad(material)}</span></li>`;
+    let resultadoHTML = '<h4>Materiales Estimados:</h4>';
+    
+    // Mostrar información del sistema y especificaciones
+    if (materiales.especificaciones) {
+        const esp = materiales.especificaciones;
+        resultadoHTML += `<div class="sistema-info">`;
+        resultadoHTML += `<h3>🏗️ Sistema de Construcción: ${esp.sistema}</h3>`;
+        resultadoHTML += `<div class="especificaciones-tecnicas">`;
+        resultadoHTML += `<p><strong>📏 Dimensiones:</strong> ${esp.dimensiones}</p>`;
+        resultadoHTML += `<p><strong>📐 Área construida:</strong> ${esp.area_construida} m²</p>`;
+        resultadoHTML += `<p><strong>🌡️ Zona climática:</strong> ${esp.zona_climatica}</p>`;
+        resultadoHTML += `<p><strong>🌍 Zona sísmica:</strong> ${esp.zona_sismica}</p>`;
+        resultadoHTML += `<p><strong>🏔️ Tipo de suelo:</strong> ${esp.tipo_suelo}</p>`;
+        if (esp.distribucion) {
+            resultadoHTML += `<p><strong>🏠 Distribución:</strong> ${esp.distribucion.dormitorios} dormitorios, ${esp.distribucion.banos} baños, ${esp.distribucion.cocinas} cocina(s), ${esp.distribucion.estar_living} estar/living</p>`;
+        }
+        resultadoHTML += `</div>`;
+        resultadoHTML += `</div>`;
+    } else {
+        // Mostrar información del sistema constructivo si está disponible
+        const tipoSistema = Object.keys(coeficientes.sistemas || {}).find(key => 
+            coeficientes.sistemas[key].materiales && 
+            Object.keys(coeficientes.sistemas[key].materiales).some(mat => materiales[mat])
+        );
+        
+        if (tipoSistema && coeficientes.sistemas[tipoSistema]) {
+            const sistema = coeficientes.sistemas[tipoSistema];
+            resultadoHTML += `<div class="sistema-info">`;
+            resultadoHTML += `<h5>${sistema.nombre}</h5>`;
+            resultadoHTML += `<p><em>${sistema.descripcion}</em></p>`;
+            resultadoHTML += `</div>`;
         }
     }
-     // Optionally display materialsExtra separately if needed
-    if (materiales.materialesExtra) {
-        resultadoHTML += '</ul><h4>Materiales Extra:</h4><ul>';
-        for (let extraMaterial in materiales.materialesExtra) {
-             if (materiales.materialesExtra[extraMaterial] > 0) {
-                let materialName = extraMaterial.replace(/_/g, ' ');
-                resultadoHTML += `<li><span class="material-name">${materialName}</span> <span class="material-quantity">${materiales.materialesExtra[extraMaterial]} ${obtenerUnidad(extraMaterial)}</span></li>`;
+    
+    resultadoHTML += '<div class="materiales-principales"><h5>Materiales Estructurales:</h5><ul>';
+    
+    for (let material in materiales) {
+        if (material !== 'materialesExtra' && materiales[material]) {
+            const item = materiales[material];
+            
+            // Manejar tanto el formato nuevo (objeto) como el viejo (número)
+            if (typeof item === 'object' && item.cantidad !== undefined) {
+                if (item.cantidad > 0) {
+                    let materialName = material.replace(/_/g, ' ');
+                    materialName = materialName.charAt(0).toUpperCase() + materialName.slice(1);
+                    resultadoHTML += `<li>`;
+                    resultadoHTML += `<span class="material-name">${materialName}</span>: `;
+                    resultadoHTML += `<span class="material-quantity">${item.cantidad} ${item.unidad}</span>`;
+                    if (item.descripcion) {
+                        resultadoHTML += `<br><small class="material-desc">${item.descripcion}</small>`;
+                    }
+                    resultadoHTML += `</li>`;
+                }
+            } else if (typeof item === 'number' && item > 0) {
+                // Compatibilidad con formato anterior
+                let materialName = material.replace(/_/g, ' ');
+                materialName = materialName.charAt(0).toUpperCase() + materialName.slice(1);
+                resultadoHTML += `<li><span class="material-name">${materialName}</span>: <span class="material-quantity">${item} ${obtenerUnidad(material)}</span></li>`;
             }
         }
     }
-
-    resultadoHTML += '</ul>';
-    resultadoHTML += '<p>Nota: Esta es una estimación aproximada. Los materiales exactos pueden variar según especificaciones detalladas y regulaciones locales.</p>';
-
+    
+    // Mostrar materiales extra si existen
+    if (materiales.materialesExtra) {
+        resultadoHTML += '</ul></div><div class="materiales-extra"><h5>Materiales Adicionales:</h5><ul>';
+        for (let extraMaterial in materiales.materialesExtra) {
+            if (materiales.materialesExtra[extraMaterial] > 0) {
+                let materialName = extraMaterial.replace(/_/g, ' ');
+                materialName = materialName.charAt(0).toUpperCase() + materialName.slice(1);
+                resultadoHTML += `<li><span class="material-name">${materialName}</span>: <span class="material-quantity">${materiales.materialesExtra[extraMaterial]} ${obtenerUnidad(extraMaterial)}</span></li>`;
+            }
+        }
+        resultadoHTML += '</ul></div>';
+    } else {
+        resultadoHTML += '</ul></div>';
+    }
+    
+    // Mostrar factor de desperdicio aplicado
+    const factor = coeficientes.factorDesperdicio || 1.1;
+    const porcentajeDesperdicio = Math.round((factor - 1) * 100);
+    
+    resultadoHTML += `<div class="nota-tecnica">`;
+    resultadoHTML += `<p><strong>Factor de desperdicio aplicado:</strong> ${porcentajeDesperdicio}% (${factor}x)</p>`;
+    resultadoHTML += `<p><strong>Nota:</strong> Esta estimación se basa en normas chilenas (NCh) y coeficientes técnicos. `;
+    resultadoHTML += `Los materiales exactos pueden variar según especificaciones detalladas, condiciones del terreno y regulaciones locales.</p>`;
+    resultadoHTML += `</div>`;
 
     document.getElementById('result').innerHTML = resultadoHTML;
 }
@@ -364,329 +510,851 @@ function obtenerUnidad(material) {
 
 
 // Funciones de cálculo para cada tipo de casa
-function calcularCasaModerna() {
-    const area = parseFloat(document.getElementById('areaCasaModerna').value);
-    const habitaciones = parseInt(document.getElementById('habitacionesModerna').value);
-    const banos = parseInt(document.getElementById('banosModerna').value);
-    const materialPrincipal = document.getElementById('materialPrincipalModerna').value;
-    const tipoTecho = document.getElementById('tipoTechoModerna').value;
-    const altoCasa = parseFloat(document.getElementById('altoCasaModerna').value);
-    const anchoParedes = parseFloat(document.getElementById('anchoParedesModerna').value);
-    const profundidadCasa = parseFloat(document.getElementById('profundidadCasaModerna').value);
-    const tipoPiso = document.getElementById('tipoPisoModerna').value;
+function calcularAlbanileriaConfinada() {
+    // Obtener valores del formulario
+    const area = parseFloat(document.getElementById('areaTotal').value);
+    const largo = parseFloat(document.getElementById('largo').value);
+    const ancho = parseFloat(document.getElementById('ancho').value);
+    const altura = parseFloat(document.getElementById('altura').value);
+    const habitaciones = parseInt(document.getElementById('habitaciones').value);
+    const banos = parseInt(document.getElementById('banos').value);
+    const tipoLadrillo = document.getElementById('tipoLadrillo').value;
+    const espesorMuro = parseFloat(document.getElementById('espesorMuro').value) / 100; // convertir cm a m
+    const tipoMortero = document.getElementById('tipoMortero').value;
+    const zonaClimatica = document.getElementById('zonaClimatica').value;
+    const zonaSismica = document.getElementById('zonaSismica').value;
 
-
-    return {
-        cemento: Math.ceil(area * 0.5),
-        arena: Math.ceil(area * 0.3),
-        grava: Math.ceil(area * 0.3),
-        varillas_acero: Math.ceil(area * 7),
-        ladrillos: materialPrincipal === 'ladrillo' ? Math.ceil(area * 60) : 0,
-        madera: materialPrincipal === 'madera' ? Math.ceil(area * 0.3) : Math.ceil(area * 0.1),
-        tejas: tipoTecho === 'teja' ? Math.ceil(area * 25) : 0,
-        laminas: tipoTecho === 'metalico' ? Math.ceil(area * 0.5) : 0,
-        pintura: Math.ceil(area * 0.2),
-        ventanas: Math.ceil(habitaciones * 1.5),
-        puertas: habitaciones + banos + 2,
-        inodoros: banos,
-        lavamanos: banos,
-        duchas: banos,
-        enchufes: Math.ceil((habitaciones * 4) + (banos * 2) + 10),
-        interruptores: Math.ceil(habitaciones + banos + 5),
-        cable_electrico: Math.ceil(area * 2.5),
-        tuberia_agua: Math.ceil(area * 1.5),
-        tuberia_drenaje: Math.ceil(area * 1),
-        materialesExtra: {
-            rejas: habitaciones + banos + 10,
-            cerraduras: habitaciones + banos + 15,
-            iluminacion: habitaciones + banos + 20
-        }
+    // Cálculos específicos para albañilería confinada
+    const perimetro = 2 * (largo + ancho);
+    const areaMuros = perimetro * altura;
+    const volumenMuros = areaMuros * espesorMuro;
+    const areaTecho = area * 1.1; // incluye aleros
+    
+    // Factores de ajuste por zona climática
+    const factoresClimaticos = {
+        'norte': 1.0,
+        'centro': 1.1,
+        'sur': 1.2
     };
+    
+    const factorClimatico = factoresClimaticos[zonaClimatica] || 1.0;
+    
+    // Factores sísmicos
+    const factoresSismicos = {
+        'zona1': 1.0,
+        'zona2': 1.1,
+        'zona3': 1.2
+    };
+    
+    const factorSismico = factoresSismicos[zonaSismica] || 1.0;
+    
+    // Factores por tipo de ladrillo
+    const factoresLadrillo = {
+        'ceramico': 1.0,
+        'tierra_cocida': 1.1,
+        'bloque_ceramico': 0.9
+    };
+    
+    const factorLadrillo = factoresLadrillo[tipoLadrillo] || 1.0;
+    
+    // Factores por tipo de mortero
+    const factoresMortero = {
+        '1_3': 1.0,  // más resistente
+        '1_4': 1.1   // más económico pero requiere más
+    };
+    
+    const factorMortero = factoresMortero[tipoMortero] || 1.0;
+    
+    let materiales = {};
+    
+    // Cálculo de ladrillos
+    const ladrillosPorM2 = tipoLadrillo === 'bloque_ceramico' ? 12.5 : 50;
+    materiales['ladrillos'] = {
+        cantidad: Math.ceil(areaMuros * ladrillosPorM2 * factorLadrillo * 1.1), // 10% desperdicio
+        unidad: 'unidades',
+        descripcion: `Ladrillos ${tipoLadrillo.replace('_', ' ')}`
+    };
+    
+    // Cálculo de cemento para mortero y pilares
+    const cementoMortero = areaMuros * 0.02 * factorMortero; // mortero de asiento
+    const cementoPilares = (perimetro / 3) * altura * 0.15 * 0.15 * 350; // pilares cada 3m, 350kg/m³
+    materiales['cemento'] = {
+        cantidad: Math.ceil((cementoMortero + cementoPilares) * factorSismico),
+        unidad: 'sacos 25kg',
+        descripcion: 'Cemento Portland'
+    };
+    
+    // Cálculo de arena
+    const arenaTotal = areaMuros * 0.015 * factorMortero + cementoPilares * 0.5;
+    materiales['arena'] = {
+        cantidad: Math.ceil(arenaTotal * 1.1),
+        unidad: 'm³',
+        descripcion: 'Arena fina para mortero'
+    };
+    
+    // Cálculo de grava para pilares
+    materiales['grava'] = {
+        cantidad: Math.ceil(cementoPilares * 0.8),
+        unidad: 'm³',
+        descripcion: 'Grava para hormigón de pilares'
+    };
+    
+    // Cálculo de acero de refuerzo
+    const aceroPilares = (perimetro / 3) * altura * 4 * 0.617; // 4 barras Ø10 por pilar
+    const aceroCadenas = perimetro * 2 * 0.617; // 2 barras Ø10 por cadena
+    materiales['acero_refuerzo'] = {
+        cantidad: Math.ceil((aceroPilares + aceroCadenas) * factorSismico),
+        unidad: 'kg',
+        descripcion: 'Barras de acero Ø10mm'
+    };
+
+    // Cálculo de instalaciones
+    materiales['ventanas'] = {
+        cantidad: habitaciones + 2, // ventanas por habitación + living y cocina
+        unidad: 'unidades',
+        descripcion: 'Ventanas de aluminio'
+    };
+    
+    materiales['puertas'] = {
+        cantidad: habitaciones + banos + 2, // + puerta principal y cocina
+        unidad: 'unidades',
+        descripcion: 'Puertas interiores y exteriores'
+    };
+    
+    materiales['inodoros'] = {
+        cantidad: banos,
+        unidad: 'unidades',
+        descripcion: 'Inodoros'
+    };
+    
+    materiales['lavamanos'] = {
+        cantidad: banos,
+        unidad: 'unidades',
+        descripcion: 'Lavamanos'
+    };
+    
+    materiales['duchas'] = {
+        cantidad: banos,
+        unidad: 'unidades',
+        descripcion: 'Duchas'
+    };
+    
+    materiales['enchufes'] = {
+        cantidad: (habitaciones * 4) + (banos * 2) + 8, // enchufes por ambiente
+        unidad: 'unidades',
+        descripcion: 'Enchufes eléctricos'
+    };
+    
+    materiales['interruptores'] = {
+        cantidad: habitaciones + banos + 4, // + áreas comunes
+        unidad: 'unidades',
+        descripcion: 'Interruptores eléctricos'
+    };
+    
+    materiales['cable_electrico'] = {
+        cantidad: Math.ceil(area * 1.5), // 1.5m de cable por m² construido
+        unidad: 'metros',
+        descripcion: 'Cable eléctrico (12 AWG)'
+    };
+    
+    materiales['tuberia_agua'] = {
+        cantidad: Math.ceil(perimetro + (banos * 8)), // red perimetral + conexiones
+        unidad: 'metros',
+        descripcion: 'Tubería de agua potable (PVC 20mm)'
+    };
+    
+    materiales['tuberia_drenaje'] = {
+        cantidad: Math.ceil(banos * 6 + area * 0.08), // drenajes + red general
+        unidad: 'metros',
+        descripcion: 'Tubería de drenaje (PVC 110mm)'
+    };
+    
+    return materiales;
 }
 
-function calcularCasaCampo() {
-    const area = parseFloat(document.getElementById('areaCasaCampo').value);
-    const habitaciones = parseInt(document.getElementById('habitacionesCampo').value);
-    const banos = parseInt(document.getElementById('banosCampo').value);
-    const materialPrincipal = document.getElementById('materialPrincipalCampo').value;
-    const altoCasa = parseFloat(document.getElementById('altoCasaCampo').value);
-    const anchoParedes = parseFloat(document.getElementById('anchoParedesCampo').value);
-    const profundidadCasa = parseFloat(document.getElementById('profundidadCasaCampo').value);
-    const tipoCobertura = document.getElementById('tipoCoberturaCampo').value;
-    const altoMuroPerimetral = parseFloat(document.getElementById('altoMuroPerimetral').value);
-    const anchoFoso = parseFloat(document.getElementById('anchoFoso').value);
+function calcularHormigonArmado() {
+    const area = parseFloat(document.getElementById('areaTotal').value);
+    const largo = parseFloat(document.getElementById('largo').value);
+    const ancho = parseFloat(document.getElementById('ancho').value);
+    const altura = parseFloat(document.getElementById('altura').value);
+    const habitaciones = parseInt(document.getElementById('habitaciones').value);
+    const banos = parseInt(document.getElementById('banos').value);
+    const resistenciaHormigon = document.getElementById('resistenciaHormigon').value;
+    const tipoAcero = document.getElementById('tipoAcero').value;
+    const espesorLosa = parseFloat(document.getElementById('espesorLosa').value) / 100;
+    const zonaClimatica = document.getElementById('zonaClimatica').value;
+    const zonaSismica = document.getElementById('zonaSismica').value;
 
+    // Cálculos básicos
+    const perimetro = 2 * (largo + ancho);
+    const volumenLosa = area * espesorLosa;
+    const areaMuros = perimetro * altura;
+    
+    // Factores de ajuste según zona
+    const factorClimatico = zonaClimatica === 'sur' ? 1.3 : zonaClimatica === 'centro' ? 1.1 : 1.0;
+    const factorSismico = zonaSismica === 'zona3' ? 1.4 : zonaSismica === 'zona2' ? 1.2 : 1.0;
+    const factorTotal = factorClimatico * factorSismico;
+    
+    const materiales = {};
+    
+    // Hormigón para losa y estructura
+    materiales['hormigon'] = {
+        cantidad: Math.ceil((volumenLosa + areaMuros * 0.2) * factorTotal), // losa + columnas/vigas
+        unidad: 'm³',
+        descripcion: `Hormigón ${resistenciaHormigon}`
+    };
+    
+    // Cemento
+    materiales['cemento'] = {
+        cantidad: Math.ceil(materiales['hormigon'].cantidad * 7 * factorTotal), // 7 sacos por m³
+        unidad: 'sacos',
+        descripcion: 'Cemento Portland'
+    };
+    
+    // Arena
+    materiales['arena'] = {
+        cantidad: Math.ceil(materiales['hormigon'].cantidad * 0.5 * factorTotal),
+        unidad: 'm³',
+        descripcion: 'Arena gruesa'
+    };
+    
+    // Grava
+    materiales['grava'] = {
+        cantidad: Math.ceil(materiales['hormigon'].cantidad * 0.8 * factorTotal),
+        unidad: 'm³',
+        descripcion: 'Grava 20mm'
+    };
+    
+    // Acero de refuerzo
+    const kgAceroPorM3 = tipoAcero === 'a63_42h' ? 120 : 100;
+    materiales['acero_refuerzo'] = {
+        cantidad: Math.ceil(materiales['hormigon'].cantidad * kgAceroPorM3 * factorTotal),
+        unidad: 'kg',
+        descripcion: `Acero ${tipoAcero}`
+    };
+    
+    // Moldajes
+    materiales['moldajes'] = {
+        cantidad: Math.ceil((area + areaMuros) * 1.2 * factorTotal),
+        unidad: 'm²',
+        descripcion: 'Moldajes de madera'
+    };
+    
+    // Instalaciones
+    materiales['ventanas'] = {
+        cantidad: habitaciones + 2,
+        unidad: 'unidades',
+        descripcion: 'Ventanas de aluminio'
+    };
+    
+    materiales['puertas'] = {
+        cantidad: habitaciones + banos + 2,
+        unidad: 'unidades',
+        descripcion: 'Puertas interiores y exteriores'
+    };
+    
+    materiales['inodoros'] = {
+        cantidad: banos,
+        unidad: 'unidades',
+        descripcion: 'Inodoros'
+    };
+    
+    materiales['lavamanos'] = {
+        cantidad: banos,
+        unidad: 'unidades',
+        descripcion: 'Lavamanos'
+    };
+    
+    materiales['duchas'] = {
+        cantidad: banos,
+        unidad: 'unidades',
+        descripcion: 'Duchas'
+    };
+    
+    materiales['enchufes'] = {
+        cantidad: (habitaciones * 4) + (banos * 2) + 8,
+        unidad: 'unidades',
+        descripcion: 'Enchufes eléctricos'
+    };
+    
+    materiales['interruptores'] = {
+        cantidad: habitaciones + banos + 4,
+        unidad: 'unidades',
+        descripcion: 'Interruptores eléctricos'
+    };
+    
+    materiales['cable_electrico'] = {
+        cantidad: Math.ceil(area * 1.5),
+        unidad: 'metros',
+        descripcion: 'Cable eléctrico (12 AWG)'
+    };
+    
+    materiales['tuberia_agua'] = {
+        cantidad: Math.ceil(perimetro + (banos * 8)),
+        unidad: 'metros',
+        descripcion: 'Tubería de agua potable (PVC 20mm)'
+    };
+    
+    materiales['tuberia_drenaje'] = {
+        cantidad: Math.ceil(banos * 6 + area * 0.08),
+        unidad: 'metros',
+        descripcion: 'Tubería de drenaje (PVC 110mm)'
+    };
+    
+    return materiales;
+}
 
-    // Materiales básicos para la construcción de la casa o campo
-    const cemento = Math.ceil(area * 0.4);
-    const arena = Math.ceil(area * 0.25);
-    const grava = Math.ceil(area * 0.25);
-    const varillasAcero = Math.ceil(area * 6);
+function calcularMadera() {
+    const area = parseFloat(document.getElementById('areaTotal').value);
+    const largo = parseFloat(document.getElementById('largo').value);
+    const ancho = parseFloat(document.getElementById('ancho').value);
+    const altura = parseFloat(document.getElementById('altura').value);
+    const habitaciones = parseInt(document.getElementById('habitaciones').value);
+    const banos = parseInt(document.getElementById('banos').value);
+    const tipoMadera = document.getElementById('tipoMadera').value;
+    const sistemaConstructivo = document.getElementById('sistemaConstructivo').value;
+    const humedadMadera = parseFloat(document.getElementById('humedadMadera').value);
+    const zonaClimatica = document.getElementById('zonaClimatica').value;
+    const zonaSismica = document.getElementById('zonaSismica').value;
 
-    // Materiales específicos para el material principal
-    let ladrillos = 0;
-    let madera = Math.ceil(area * 0.2);
+    // Cálculos básicos
+    const perimetro = 2 * (largo + ancho);
+    const areaMuros = perimetro * altura;
+    
+    // Factores de ajuste según zona
+    const factorClimatico = zonaClimatica === 'sur' ? 1.2 : zonaClimatica === 'centro' ? 1.1 : 1.0;
+    const factorSismico = zonaSismica === 'zona3' ? 1.3 : zonaSismica === 'zona2' ? 1.15 : 1.0;
+    const factorHumedad = humedadMadera > 15 ? 1.1 : 1.0;
+    const factorTotal = factorClimatico * factorSismico * factorHumedad;
+    
+    const materiales = {};
+    
+    // Estructura de madera
+    const factorMadera = tipoMadera === 'pino_radiata' ? 1.0 : tipoMadera === 'coigue' ? 0.9 : 1.1;
+    
+    materiales['vigas_principales'] = {
+        cantidad: Math.ceil((largo + ancho) * 2 * factorTotal * factorMadera),
+        unidad: 'metros lineales',
+        descripcion: `Vigas ${tipoMadera} ${sistemaConstructivo}`
+    };
+    
+    materiales['pilares'] = {
+        cantidad: Math.ceil(area / 16 * factorTotal), // 1 pilar cada 16m²
+        unidad: 'unidades',
+        descripcion: `Pilares ${tipoMadera} ${sistemaConstructivo}`
+    };
+    
+    materiales['tablas_piso'] = {
+        cantidad: Math.ceil(area * 1.1 * factorTotal),
+        unidad: 'm²',
+        descripcion: `Tablas de piso ${tipoMadera}`
+    };
+    
+    materiales['tablas_muros'] = {
+        cantidad: Math.ceil(areaMuros * 1.1 * factorTotal),
+        unidad: 'm²',
+        descripcion: `Tablas de muros ${tipoMadera}`
+    };
+    
+    materiales['tablas_techo'] = {
+        cantidad: Math.ceil(area * 1.2 * factorTotal), // incluye aleros
+        unidad: 'm²',
+        descripcion: `Tablas de techo ${tipoMadera}`
+    };
+    
+    // Elementos de unión
+    materiales['elementos_union'] = {
+        cantidad: Math.ceil(area * 15 * factorTotal),
+        unidad: 'kg',
+        descripcion: 'Tornillos y clavos galvanizados'
+    };
+    
+    // Aislación
+    materiales['aislacion'] = {
+        cantidad: Math.ceil(areaMuros * factorTotal),
+        unidad: 'm²',
+        descripcion: 'Aislación térmica'
+    };
+    
+    // Impermeabilización
+    materiales['impermeabilizacion'] = {
+        cantidad: Math.ceil(area * 1.1 * factorTotal),
+        unidad: 'm²',
+        descripcion: 'Membrana impermeabilizante'
+    };
+    
+    // Instalaciones
+    materiales['ventanas'] = {
+        cantidad: habitaciones + 2,
+        unidad: 'unidades',
+        descripcion: 'Ventanas de madera'
+    };
+    
+    materiales['puertas'] = {
+        cantidad: habitaciones + banos + 2,
+        unidad: 'unidades',
+        descripcion: 'Puertas de madera'
+    };
+    
+    materiales['inodoros'] = {
+        cantidad: banos,
+        unidad: 'unidades',
+        descripcion: 'Inodoros'
+    };
+    
+    materiales['lavamanos'] = {
+        cantidad: banos,
+        unidad: 'unidades',
+        descripcion: 'Lavamanos'
+    };
+    
+    materiales['duchas'] = {
+        cantidad: banos,
+        unidad: 'unidades',
+        descripcion: 'Duchas'
+    };
+    
+    materiales['enchufes'] = {
+        cantidad: (habitaciones * 4) + (banos * 2) + 8,
+        unidad: 'unidades',
+        descripcion: 'Enchufes eléctricos'
+    };
+    
+    materiales['interruptores'] = {
+        cantidad: habitaciones + banos + 4,
+        unidad: 'unidades',
+        descripcion: 'Interruptores eléctricos'
+    };
+    
+    materiales['cable_electrico'] = {
+        cantidad: Math.ceil(area * 1.5),
+        unidad: 'metros',
+        descripcion: 'Cable eléctrico (12 AWG)'
+    };
+    
+    materiales['tuberia_agua'] = {
+        cantidad: Math.ceil(perimetro + (banos * 8)),
+        unidad: 'metros',
+        descripcion: 'Tubería de agua potable (PVC 20mm)'
+    };
+    
+    materiales['tuberia_drenaje'] = {
+        cantidad: Math.ceil(banos * 6 + area * 0.08),
+        unidad: 'metros',
+        descripcion: 'Tubería de drenaje (PVC 110mm)'
+    };
+    
+    return materiales;
+}
 
-    if (materialPrincipal === 'ladrillo') {
-        ladrillos = Math.ceil(area * 50);
-        madera = Math.ceil(area * 0.4); // Ajustar si es necesario
+function calcularSteelFraming() {
+    const area = parseFloat(document.getElementById('areaTotal').value);
+    const largo = parseFloat(document.getElementById('largo').value);
+    const ancho = parseFloat(document.getElementById('ancho').value);
+    const altura = parseFloat(document.getElementById('altura').value);
+    const habitaciones = parseInt(document.getElementById('habitaciones').value);
+    const banos = parseInt(document.getElementById('banos').value);
+    const espesorPerfil = document.getElementById('espesorPerfil').value;
+    const tipoAislante = document.getElementById('tipoAislante').value;
+    const espesorAislante = parseFloat(document.getElementById('espesorAislante').value);
+    const zonaClimatica = document.getElementById('zonaClimatica').value;
+    const zonaSismica = document.getElementById('zonaSismica').value;
+
+    // Cálculos básicos
+    const perimetro = 2 * (largo + ancho);
+    const areaMuros = perimetro * altura;
+    
+    // Factores de ajuste según zona
+    const factorClimatico = zonaClimatica === 'sur' ? 1.2 : zonaClimatica === 'centro' ? 1.1 : 1.0;
+    const factorSismico = zonaSismica === 'zona3' ? 1.3 : zonaSismica === 'zona2' ? 1.15 : 1.0;
+    const factorTotal = factorClimatico * factorSismico;
+    
+    const materiales = {};
+    
+    // Perfiles de acero
+    const factorPerfil = espesorPerfil === '1.2mm' ? 1.0 : espesorPerfil === '1.0mm' ? 1.1 : espesorPerfil === '0.8mm' ? 1.2 : 1.3;
+    
+    materiales['perfiles_acero'] = {
+        cantidad: Math.ceil(areaMuros * 8 * factorPerfil * factorTotal), // 8 metros lineales por m² de muro
+        unidad: 'metros lineales',
+        descripcion: `Perfiles de acero galvanizado ${espesorPerfil}`
+    };
+    
+    // Placas de revestimiento
+    materiales['placas_revestimiento'] = {
+        cantidad: Math.ceil(areaMuros * 2.2 * factorTotal), // ambas caras + desperdicio
+        unidad: 'm²',
+        descripcion: 'Placas de fibrocemento o yeso-cartón'
+    };
+    
+    // Aislación
+    const factorAislante = tipoAislante === 'poliuretano' ? 0.8 : tipoAislante === 'lana_mineral' ? 1.0 : 1.1;
+    materiales['aislacion'] = {
+        cantidad: Math.ceil(areaMuros * factorAislante * factorTotal),
+        unidad: 'm²',
+        descripcion: `${tipoAislante.replace('_', ' ')} ${espesorAislante}mm`
+    };
+    
+    // Elementos de fijación
+    materiales['tornillos_fijacion'] = {
+        cantidad: Math.ceil(areaMuros * 25 * factorTotal), // 25 tornillos por m²
+        unidad: 'unidades',
+        descripcion: 'Tornillos autoperforantes'
+    };
+    
+    // Fundaciones (zapatas para estructura liviana)
+    materiales['hormigon_fundacion'] = {
+        cantidad: Math.ceil(perimetro * 0.3 * 0.6 * factorTotal), // zapata corrida
+        unidad: 'm³',
+        descripcion: 'Hormigón para fundaciones'
+    };
+    
+    materiales['acero_fundacion'] = {
+        cantidad: Math.ceil(perimetro * 8 * factorTotal), // 8 kg por metro lineal
+        unidad: 'kg',
+        descripcion: 'Acero de refuerzo para fundaciones'
+    };
+
+    // Instalaciones
+    materiales['ventanas'] = {
+        cantidad: habitaciones + 2,
+        unidad: 'unidades',
+        descripcion: 'Ventanas de aluminio'
+    };
+    
+    materiales['puertas'] = {
+        cantidad: habitaciones + banos + 2,
+        unidad: 'unidades',
+        descripcion: 'Puertas interiores y exteriores'
+    };
+    
+    materiales['inodoros'] = {
+        cantidad: banos,
+        unidad: 'unidades',
+        descripcion: 'Inodoros'
+    };
+    
+    materiales['lavamanos'] = {
+        cantidad: banos,
+        unidad: 'unidades',
+        descripcion: 'Lavamanos'
+    };
+    
+    materiales['duchas'] = {
+        cantidad: banos,
+        unidad: 'unidades',
+        descripcion: 'Duchas'
+    };
+    
+    materiales['enchufes'] = {
+        cantidad: (habitaciones * 4) + (banos * 2) + 8,
+        unidad: 'unidades',
+        descripcion: 'Enchufes eléctricos'
+    };
+    
+    materiales['interruptores'] = {
+        cantidad: habitaciones + banos + 4,
+        unidad: 'unidades',
+        descripcion: 'Interruptores eléctricos'
+    };
+    
+    materiales['cable_electrico'] = {
+        cantidad: Math.ceil(area * 1.5),
+        unidad: 'metros',
+        descripcion: 'Cable eléctrico (12 AWG)'
+    };
+    
+    materiales['tuberia_agua'] = {
+        cantidad: Math.ceil(perimetro + (banos * 8)),
+        unidad: 'metros',
+        descripcion: 'Tubería de agua potable (PVC 20mm)'
+    };
+    
+    materiales['tuberia_drenaje'] = {
+        cantidad: Math.ceil(banos * 6 + area * 0.08),
+        unidad: 'metros',
+        descripcion: 'Tubería de drenaje (PVC 110mm)'
+    };
+    
+    return materiales;
+}
+
+function calcularPrefabricada() {
+    const area = parseFloat(document.getElementById('areaTotal').value);
+    const largo = parseFloat(document.getElementById('largo').value);
+    const ancho = parseFloat(document.getElementById('ancho').value);
+    const altura = parseFloat(document.getElementById('altura').value);
+    const habitaciones = parseInt(document.getElementById('habitaciones').value);
+    const banos = parseInt(document.getElementById('banos').value);
+    const tipoPrefabricado = document.getElementById('tipoPrefabricado').value;
+    const nivelTerminacion = document.getElementById('nivelTerminacion').value;
+    const zonaClimatica = document.getElementById('zonaClimatica').value;
+    const zonaSismica = document.getElementById('zonaSismica').value;
+
+    // Cálculos básicos
+    const perimetro = 2 * (largo + ancho);
+    
+    // Factores de ajuste según zona
+    const factorClimatico = zonaClimatica === 'sur' ? 1.15 : zonaClimatica === 'centro' ? 1.05 : 1.0;
+    const factorSismico = zonaSismica === 'zona3' ? 1.2 : zonaSismica === 'zona2' ? 1.1 : 1.0;
+    const factorTerminacion = nivelTerminacion === 'alto' ? 1.3 : nivelTerminacion === 'medio' ? 1.15 : 1.0;
+    const factorTotal = factorClimatico * factorSismico * factorTerminacion;
+    
+    const materiales = {};
+    
+    // Módulos prefabricados según tipo
+    const factorTipo = {
+        'paneles_hormigon': 1.0,
+        'modulos_madera': 0.8,
+        'paneles_sip': 0.9,
+        'contenedores': 0.6
+    };
+    
+    materiales['modulos_prefabricados'] = {
+        cantidad: Math.ceil(area / 20 * factorTipo[tipoPrefabricado] * factorTotal), // 1 módulo cada 20m²
+        unidad: 'unidades',
+        descripcion: `Módulos ${tipoPrefabricado.replace('_', ' ')}`
+    };
+    
+    // Fundaciones (simplificadas para prefabricados)
+    materiales['fundacion_prefabricada'] = {
+        cantidad: Math.ceil(perimetro * 0.4 * 0.4 * factorTotal),
+        unidad: 'm³',
+        descripcion: 'Fundación para estructura prefabricada'
+    };
+    
+    // Conexiones y montaje
+    materiales['elementos_conexion'] = {
+        cantidad: Math.ceil(area * 5 * factorTotal),
+        unidad: 'kg',
+        descripcion: 'Elementos de conexión y montaje'
+    };
+    
+    // Sellado y terminaciones
+    materiales['sellantes'] = {
+        cantidad: Math.ceil(perimetro * 2 * factorTotal),
+        unidad: 'metros lineales',
+        descripcion: 'Sellantes para juntas'
+    };
+    
+    // Aislación adicional si es necesaria
+    if (tipoPrefabricado !== 'paneles_sip') {
+        materiales['aislacion_adicional'] = {
+            cantidad: Math.ceil(area * 0.8 * factorTotal),
+            unidad: 'm²',
+            descripcion: 'Aislación térmica adicional'
+        };
     }
 
-    const pintura = Math.ceil(area * 0.15);
-
-    // Materiales adicionales basados en el número de habitaciones y baños
-    const ventanas = Math.ceil(habitaciones * 1.2);
-    const puertas = habitaciones + banos + 2;
-    const inodoros = banos;
-    const lavamanos = banos;
-    const duchas = banos;
-    const enchufes = Math.ceil((habitaciones * 3) + (banos * 2) + 8);
-    const interruptores = Math.ceil(habitaciones + banos + 4);
-    const cableElectrico = Math.ceil(area * 2);
-    const tuberiaAgua = Math.ceil(area * 1.2);
-    const tuberiaDrenaje = Math.ceil(area * 0.8);
-
-    // Materiales extra adicionales para el diseño y funcionalidad
-    const rejas = habitaciones + banos + 12;
-    const cerraduras = habitaciones + banos + 18;
-    const iluminacion = habitaciones + banos + 25;
-    const ventilacion = habitaciones + banos + 30;
-
-    return {
-        cemento,
-        arena,
-        grava,
-        varillasAcero,
-        ladrillos,
-        madera,
-        pintura,
-        ventanas,
-        puertas,
-        inodoros,
-        lavamanos,
-        duchas,
-        enchufes,
-        interruptores,
-        cableElectrico,
-        tuberiaAgua,
-        tuberiaDrenaje,
-        materialesExtra: {
-            rejas,
-            cerraduras,
-            iluminacion,
-            ventilacion
-        }
+    // Instalaciones
+    materiales['ventanas'] = {
+        cantidad: habitaciones + 2,
+        unidad: 'unidades',
+        descripcion: 'Ventanas'
     };
+    
+    materiales['puertas'] = {
+        cantidad: habitaciones + banos + 2,
+        unidad: 'unidades',
+        descripcion: 'Puertas interiores y exteriores'
+    };
+    
+    materiales['inodoros'] = {
+        cantidad: banos,
+        unidad: 'unidades',
+        descripcion: 'Inodoros'
+    };
+    
+    materiales['lavamanos'] = {
+        cantidad: banos,
+        unidad: 'unidades',
+        descripcion: 'Lavamanos'
+    };
+    
+    materiales['duchas'] = {
+        cantidad: banos,
+        unidad: 'unidades',
+        descripcion: 'Duchas'
+    };
+    
+    materiales['enchufes'] = {
+        cantidad: (habitaciones * 4) + (banos * 2) + 8,
+        unidad: 'unidades',
+        descripcion: 'Enchufes eléctricos'
+    };
+    
+    materiales['interruptores'] = {
+        cantidad: habitaciones + banos + 4,
+        unidad: 'unidades',
+        descripcion: 'Interruptores eléctricos'
+    };
+    
+    materiales['cable_electrico'] = {
+        cantidad: Math.ceil(area * 1.2),
+        unidad: 'metros',
+        descripcion: 'Cable eléctrico (12 AWG)'
+    };
+    
+    materiales['tuberia_agua'] = {
+        cantidad: Math.ceil(perimetro + (banos * 6)),
+        unidad: 'metros',
+        descripcion: 'Tubería de agua potable (PVC 20mm)'
+    };
+    
+    materiales['tuberia_drenaje'] = {
+        cantidad: Math.ceil(banos * 5 + area * 0.06),
+        unidad: 'metros',
+        descripcion: 'Tubería de drenaje (PVC 110mm)'
+    };
+    
+    return materiales;
 }
 
-function calcularCasaMadera() {
-    const area = parseFloat(document.getElementById('areaCasaMadera').value);
-    const habitaciones = parseInt(document.getElementById('habitacionesMadera').value);
-    const banos = parseInt(document.getElementById('banosMadera').value);
-    const tipoMadera = document.getElementById('tipoMadera').value;
-    const altoCasa = parseFloat(document.getElementById('altoCasaMadera').value);
-    const anchoParedes = parseFloat(document.getElementById('anchoParedesMadera').value);
-    const profundidadCasa = parseFloat(document.getElementById('profundidadCasaMadera').value);
-    const tipoTecho = document.getElementById('tipoTechoMadera').value;
-    const altoPiso = parseFloat(document.getElementById('altoPisoMadera').value);
-    const espesorTablas = parseFloat(document.getElementById('espesorTablas').value);
-
-
-    return {
-        madera: Math.ceil(area * 0.6),
-        cemento: Math.ceil(area * 0.3),
-        pintura: Math.ceil(area * 0.1),
-        ventanas: Math.ceil(habitaciones * 1.2),
-        puertas: habitaciones + banos + 2,
-        inodoros: banos,
-        lavamanos: banos,
-        duchas: banos,
-        enchufes: Math.ceil((habitaciones * 3) + (banos * 2) + 8),
-        interruptores: Math.ceil(habitaciones + banos + 4),
-        cable_electrico: Math.ceil(area * 1.5),
-        tuberia_agua: Math.ceil(area * 1),
-        tuberia_drenaje: Math.ceil(area * 0.6),
-        materialesExtra: {
-            rejas: habitaciones + banos + 10,
-            cerraduras: habitaciones + banos + 15,
-            iluminacion: habitaciones + banos + 20,
-            ventilacion: habitaciones + banos + 25
-        }
-    };
-}
-
-function calcularCasaCemento() {
-    const area = parseFloat(document.getElementById('areaCasaCemento').value);
-    const habitaciones = parseInt(document.getElementById('habitacionesCemento').value);
-    const banos = parseInt(document.getElementById('banosCemento').value);
-    const tipoCemento = document.getElementById('tipoCemento').value;
-    const altoCasa = parseFloat(document.getElementById('altoCasaCemento').value);
-    const anchoParedes = parseFloat(document.getElementById('anchoParedesCemento').value);
-    const profundidadCasa = parseFloat(document.getElementById('profundidadCasaCemento').value);
-    const tipoIluminacion = document.getElementById('tipoIluminacion').value;
-    const altoVentanas = parseFloat(document.getElementById('altoVentanas').value);
-
-    return {
-        cemento: Math.ceil(area * 0.7),
-        arena: Math.ceil(area * 0.35),
-        grava: Math.ceil(area * 0.35),
-        varillas_acero: Math.ceil(area * 8),
-        pintura: Math.ceil(area * 0.25),
-        ventanas: Math.ceil(habitaciones * 1.5),
-        puertas: habitaciones + banos + 2,
-        inodoros: banos,
-        lavamanos: banos,
-        duchas: banos,
-        enchufes: Math.ceil((habitaciones * 4) + (banos * 2) + 10),
-        interruptores: Math.ceil(habitaciones + banos + 5),
-        cable_electrico: Math.ceil(area * 2.5),
-        tuberia_agua: Math.ceil(area * 1.5),
-        tuberia_drenaje: Math.ceil(area * 1),
-        materialesExtra: {
-            rejas: habitaciones + banos + 12,
-            cerraduras: habitaciones + banos + 18,
-            iluminacion: habitaciones + banos + 22,
-            ventilacion: habitaciones + banos + 28
-        }
-    };
-}
-
-function calcularCasaLadrillo() {
-    const area = parseFloat(document.getElementById('areaCasaLadrillo').value);
-    const habitaciones = parseInt(document.getElementById('habitacionesLadrillo').value);
-    const banos = parseInt(document.getElementById('banosLadrillo').value);
-    const tipoLadrillo = document.getElementById('tipoLadrillo').value;
-    const altoCasa = parseFloat(document.getElementById('altoCasaLadrillo').value);
-    const anchoParedes = parseFloat(document.getElementById('anchoParedesLadrillo').value);
-    const profundidadCasa = parseFloat(document.getElementById('profundidadCasaLadrillo').value);
-    const tipoDiseño = document.getElementById('tipoDiseño').value;
-    const altoSistemaEnergiaSolar = parseFloat(document.getElementById('altoSistemaEnergiaSolar').value);
-
-    return {
-        ladrillos: Math.ceil(area * 60),
-        cemento: Math.ceil(area * 0.5),
-        arena: Math.ceil(area * 0.3),
-        grava: Math.ceil(area * 0.3),
-        varillas_acero: Math.ceil(area * 7),
-        pintura: Math.ceil(area * 0.2),
-        ventanas: Math.ceil(habitaciones * 1.5),
-        puertas: habitaciones + banos + 2,
-        inodoros: banos,
-        lavamanos: banos,
-        duchas: banos,
-        enchufes: Math.ceil((habitaciones * 4) + (banos * 2) + 10),
-        interruptores: Math.ceil(habitaciones + banos + 5),
-        cable_electrico: Math.ceil(area * 2.5),
-        tuberia_agua: Math.ceil(area * 1.5),
-        tuberia_drenaje: Math.ceil(area * 1),
-        materialesExtra: {
-            rejas: habitaciones + banos + 15,
-            cerraduras: habitaciones + banos + 20,
-            iluminacion: habitaciones + banos + 25,
-            ventilacion: habitaciones + banos + 30
-        }
-    };
-}
-
-function calcularCasaPrefabricada() {
-    const area = parseFloat(document.getElementById('areaCasaPrefabricada').value);
-    const habitaciones = parseInt(document.getElementById('habitacionesPrefabricada').value);
-    const banos = parseInt(document.getElementById('banosPrefabricada').value);
-    const tipoPrefabricada = document.getElementById('tipoPrefabricada').value;
-    const altoCasa = parseFloat(document.getElementById('altoCasaPrefabricada').value);
-    const anchoParedes = parseFloat(document.getElementById('anchoParedesPrefabricada').value);
-    const profundidadCasa = parseFloat(document.getElementById('profundidadCasaPrefabricada').value);
-    const tipoSistemaEnergiaRenovable = document.getElementById('tipoSistemaEnergiaRenovable').value;
-    const altoSistemaEnergiaRenovable = parseFloat(document.getElementById('altoSistemaEnergiaRenovable').value);
-
-
-    return {
-        prefabricados: Math.ceil(area * 0.7),
-        cemento: Math.ceil(area * 0.2),
-        pintura: Math.ceil(area * 0.1),
-        ventanas: Math.ceil(habitaciones * 1.2),
-        puertas: habitaciones + banos + 2,
-        inodoros: banos,
-        lavamanos: banos,
-        duchas: banos,
-        enchufes: Math.ceil((habitaciones * 3) + (banos * 2) + 8),
-        interruptores: Math.ceil(habitaciones + banos + 4),
-        cable_electrico: Math.ceil(area * 1.5),
-        tuberia_agua: Math.ceil(area * 1),
-        tuberia_drenaje: Math.ceil(area * 0.6),
-        materialesExtra: {
-            rejas: habitaciones + banos + 10,
-            cerraduras: habitaciones + banos + 15,
-            iluminacion: habitaciones + banos + 20,
-            ventilacion: habitaciones + banos + 25
-        }
-    };
-}
-
-function calcularCasaAdobe() {
-    const area = parseFloat(document.getElementById('areaCasaAdobe').value);
-    const habitaciones = parseInt(document.getElementById('habitacionesAdobe').value);
-    const banos = parseInt(document.getElementById('banosAdobe').value);
+function calcularAdobe() {
+    const area = parseFloat(document.getElementById('areaTotal').value);
+    const largo = parseFloat(document.getElementById('largo').value);
+    const ancho = parseFloat(document.getElementById('ancho').value);
+    const altura = parseFloat(document.getElementById('altura').value);
+    const habitaciones = parseInt(document.getElementById('habitaciones').value);
+    const banos = parseInt(document.getElementById('banos').value);
     const tipoAdobe = document.getElementById('tipoAdobe').value;
-    const altoCasa = parseFloat(document.getElementById('altoCasaAdobe').value);
-    const anchoParedes = parseFloat(document.getElementById('anchoParedesAdobe').value);
-    const profundidadCasa = parseFloat(document.getElementById('profundidadCasaAdobe').value);
-    const tipoSistemaIrrigación = document.getElementById('tipoSistemaIrrigación').value;
+    const espesorMuro = parseFloat(document.getElementById('espesorMuro').value) / 100; // convertir cm a m
+    const tipoRevoque = document.getElementById('tipoRevoque').value;
+    const zonaClimatica = document.getElementById('zonaClimatica').value;
+    const zonaSismica = document.getElementById('zonaSismica').value;
 
-
-    return {
-        adobe: Math.ceil(area * 0.6),
-        cemento: Math.ceil(area * 0.2),
-        pintura: Math.ceil(area * 0.1),
-        ventanas: Math.ceil(habitaciones * 1.2),
-        puertas: habitaciones + banos + 2,
-        inodoros: banos,
-        lavamanos: banos,
-        duchas: banos,
-        enchufes: Math.ceil((habitaciones * 3) + (banos * 2) + 8),
-        interruptores: Math.ceil(habitaciones + banos + 4),
-        cable_electrico: Math.ceil(area * 1.5),
-        tuberia_agua: Math.ceil(area * 1),
-        tuberia_drenaje: Math.ceil(area * 0.6),
-        materialesExtra: {
-            rejas: habitaciones + banos + 12,
-            cerraduras: habitaciones + banos + 18,
-            iluminacion: habitaciones + banos + 24,
-            ventilacion: habitaciones + banos + 30
-        }
+    // Cálculos básicos
+    const perimetro = 2 * (largo + ancho);
+    const areaMuros = perimetro * altura;
+    const volumenMuros = areaMuros * espesorMuro;
+    
+    // Factores de ajuste según zona (adobe es más sensible al clima)
+    const factorClimatico = zonaClimatica === 'sur' ? 1.3 : zonaClimatica === 'centro' ? 1.1 : 1.0;
+    const factorSismico = zonaSismica === 'zona2' ? 1.2 : 1.0; // Adobe no recomendado en zona 3
+    const factorTotal = factorClimatico * factorSismico;
+    
+    const materiales = {};
+    
+    // Adobes según tipo
+    const factorTipoAdobe = {
+        'tradicional': 1.0,
+        'estabilizado': 0.9,
+        'comprimido': 0.8
     };
-}
-
-function calcularCasaSustentable() {
-    const area = parseFloat(document.getElementById('areaCasaSustentable').value);
-    const habitaciones = parseInt(document.getElementById('habitacionesSustentable').value);
-    const banos = parseInt(document.getElementById('banosSustentable').value);
-    const materialSustentable = document.getElementById('materialSustentable').value;
-    const altoCasa = parseFloat(document.getElementById('altoCasaSustentable').value);
-    const anchoParedes = parseFloat(document.getElementById('anchoParedesSustentable').value);
-    const profundidadCasa = parseFloat(document.getElementById('profundidadCasaSustentable').value);
-    const sistemaEnergiaRenovable = document.getElementById('sistemaEnergiaRenovable').value;
-
-
-    return {
-        paneles_solares: Math.ceil(area * 0.1),
-        sistema_recolecta_agua: Math.ceil(area * 0.05),
-        materiales_ecologicos: Math.ceil(area * 0.4),
-        ventanas: Math.ceil(habitaciones * 1.2),
-        puertas: habitaciones + banos + 2,
-        inodoros: banos,
-        lavamanos: banos,
-        duchas: banos,
-        enchufes: Math.ceil((habitaciones * 3) + (banos * 2) + 8),
-        interruptores: Math.ceil(habitaciones + banos + 4),
-        cable_electrico: Math.ceil(area * 1.5),
-        tuberia_agua: Math.ceil(area * 1),
-        tuberia_drenaje: Math.ceil(area * 0.6),
-        materialesExtra: {
-            rejas: habitaciones + banos + 15,
-            cerraduras: habitaciones + banos + 22,
-            iluminacion: habitaciones + banos + 30,
-            ventilacion: habitaciones + banos + 35
-        }
+    
+    const adobesPorM3 = 120; // aproximadamente
+    materiales['adobes'] = {
+        cantidad: Math.ceil(volumenMuros * adobesPorM3 * factorTipoAdobe[tipoAdobe] * factorTotal * 1.1),
+        unidad: 'unidades',
+        descripcion: `Adobes ${tipoAdobe}`
     };
+    
+    // Barro para mortero
+    materiales['barro_mortero'] = {
+        cantidad: Math.ceil(areaMuros * 0.02 * factorTotal),
+        unidad: 'm³',
+        descripcion: 'Barro para mortero de asiento'
+    };
+    
+    // Paja para refuerzo
+    materiales['paja_refuerzo'] = {
+        cantidad: Math.ceil(volumenMuros * 20 * factorTotal), // 20 kg por m³
+        unidad: 'kg',
+        descripcion: 'Paja para refuerzo del adobe'
+    };
+    
+    // Revoque según tipo
+    const factorRevoque = tipoRevoque === 'cemento_cal' ? 1.2 : 1.0;
+    materiales['material_revoque'] = {
+        cantidad: Math.ceil(areaMuros * 2 * 0.02 * factorRevoque * factorTotal), // ambas caras
+        unidad: 'm³',
+        descripcion: `Material para revoque ${tipoRevoque.replace('_', ' y ')}`
+    };
+    
+    // Vigas de madera para techo (adobe requiere techo liviano)
+    materiales['vigas_madera'] = {
+        cantidad: Math.ceil(area / 2 * factorTotal), // 1 viga cada 2m²
+        unidad: 'metros lineales',
+        descripcion: 'Vigas de madera para estructura de techo'
+    };
+    
+    // Sobrecimiento (fundamental en adobe)
+    materiales['piedra_sobrecimiento'] = {
+        cantidad: Math.ceil(perimetro * 0.4 * 0.6 * factorTotal), // 40cm alto x 60cm ancho
+        unidad: 'm³',
+        descripcion: 'Piedra para sobrecimiento'
+    };
+    
+    // Cal para estabilización
+    if (tipoAdobe === 'estabilizado') {
+        materiales['cal'] = {
+            cantidad: Math.ceil(volumenMuros * 50 * factorTotal), // 50 kg por m³
+            unidad: 'kg',
+            descripcion: 'Cal para estabilización del adobe'
+        };
+    }
+
+
+    // Instalaciones (simplificadas para adobe)
+    materiales['ventanas'] = {
+        cantidad: habitaciones + 1, // menos ventanas en adobe
+        unidad: 'unidades',
+        descripcion: 'Ventanas de madera'
+    };
+    
+    materiales['puertas'] = {
+        cantidad: habitaciones + banos + 2,
+        unidad: 'unidades',
+        descripcion: 'Puertas de madera'
+    };
+    
+    materiales['inodoros'] = {
+        cantidad: banos,
+        unidad: 'unidades',
+        descripcion: 'Inodoros'
+    };
+    
+    materiales['lavamanos'] = {
+        cantidad: banos,
+        unidad: 'unidades',
+        descripcion: 'Lavamanos'
+    };
+    
+    materiales['duchas'] = {
+        cantidad: banos,
+        unidad: 'unidades',
+        descripcion: 'Duchas'
+    };
+    
+    materiales['enchufes'] = {
+        cantidad: (habitaciones * 3) + (banos * 2) + 6, // instalación eléctrica básica
+        unidad: 'unidades',
+        descripcion: 'Enchufes eléctricos'
+    };
+    
+    materiales['interruptores'] = {
+        cantidad: habitaciones + banos + 3,
+        unidad: 'unidades',
+        descripcion: 'Interruptores eléctricos'
+    };
+    
+    materiales['cable_electrico'] = {
+        cantidad: Math.ceil(area * 1.0),
+        unidad: 'metros',
+        descripcion: 'Cable eléctrico (12 AWG)'
+    };
+    
+    materiales['tuberia_agua'] = {
+        cantidad: Math.ceil(perimetro * 0.8 + (banos * 6)),
+        unidad: 'metros',
+        descripcion: 'Tubería de agua potable (PVC 20mm)'
+    };
+    
+    materiales['tuberia_drenaje'] = {
+        cantidad: Math.ceil(banos * 4 + area * 0.05),
+        unidad: 'metros',
+        descripcion: 'Tubería de drenaje (PVC 110mm)'
+    };
+    
+    return materiales;
 }

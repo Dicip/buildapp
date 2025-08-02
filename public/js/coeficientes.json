@@ -1,0 +1,330 @@
+{
+  "factorDesperdicio": 1.1,
+  "sistemas": {
+    "Casa Moderna": {
+      "nombre": "Albañilería confinada",
+      "descripcion": "Sistema de muros de albañilería confinados por elementos de hormigón armado",
+      "materiales": {
+        "ladrillos": {
+          "factor": 55,
+          "unidad": "unidades",
+          "descripcion": "Ladrillos cerámicos por m² de muro"
+        },
+        "cemento": {
+          "factor": 0.35,
+          "unidad": "sacos 25kg",
+          "descripcion": "Cemento Portland para mortero y hormigón"
+        },
+        "arena": {
+          "factor": 0.25,
+          "unidad": "m³",
+          "descripcion": "Arena fina para mortero"
+        },
+        "grava": {
+          "factor": 0.15,
+          "unidad": "m³",
+          "descripcion": "Grava para hormigón de pilares y cadenas"
+        },
+        "varillas_acero": {
+          "factor": 12,
+          "unidad": "kg",
+          "descripcion": "Acero de refuerzo Ø10-16mm"
+        },
+        "madera": {
+          "factor": 0.08,
+          "unidad": "m³",
+          "descripcion": "Madera para moldajes y estructura de techo"
+        },
+        "tejas": {
+          "factor": 25,
+          "unidad": "unidades",
+          "descripcion": "Tejas cerámicas"
+        },
+        "laminas": {
+          "factor": 1.1,
+          "unidad": "m²",
+          "descripcion": "Láminas metálicas para techo"
+        },
+        "pintura": {
+          "factor": 0.15,
+          "unidad": "litros",
+          "descripcion": "Pintura para muros exteriores e interiores"
+        }
+      }
+    },
+    "Casa de Campo": {
+      "nombre": "Construcción mixta rural",
+      "descripcion": "Sistema mixto con materiales locales",
+      "materiales": {
+        "madera": {
+          "factor": 0.12,
+          "unidad": "m³",
+          "descripcion": "Madera estructural y revestimientos"
+        },
+        "piedra": {
+          "factor": 0.8,
+          "unidad": "m³",
+          "descripcion": "Piedra para cimientos y muros"
+        },
+        "cemento": {
+          "factor": 0.25,
+          "unidad": "sacos 25kg",
+          "descripcion": "Cemento para morteros"
+        },
+        "tejas": {
+          "factor": 28,
+          "unidad": "unidades",
+          "descripcion": "Tejas de arcilla"
+        },
+        "pintura": {
+          "factor": 0.12,
+          "unidad": "litros",
+          "descripcion": "Pintura protectora"
+        }
+      }
+    },
+    "Casa de Madera": {
+      "nombre": "Construcción en madera",
+      "descripcion": "Sistema de entramado de madera 2x4 o 2x6",
+      "materiales": {
+        "madera": {
+          "factor": 0.045,
+          "unidad": "m³",
+          "descripcion": "Madera aserrada pino radiata"
+        },
+        "tableros_osb": {
+          "factor": 6,
+          "unidad": "m²",
+          "descripcion": "Tableros OSB estructurales"
+        },
+        "aislante": {
+          "factor": 0.05,
+          "unidad": "m³",
+          "descripcion": "Lana mineral o poliestireno"
+        },
+        "cemento": {
+          "factor": 0.15,
+          "unidad": "sacos 25kg",
+          "descripcion": "Cemento para cimientos"
+        },
+        "pintura": {
+          "factor": 0.1,
+          "unidad": "litros",
+          "descripcion": "Pintura y protectores para madera"
+        },
+        "herrajes": {
+          "factor": 2.5,
+          "unidad": "kg",
+          "descripcion": "Clavos, tornillos y conectores metálicos"
+        }
+      }
+    },
+    "Casa de Cemento": {
+      "nombre": "Hormigón armado",
+      "descripcion": "Estructura de pilares, vigas y losas de hormigón",
+      "materiales": {
+        "cemento": {
+          "factor": 0.6,
+          "unidad": "sacos 25kg",
+          "descripcion": "Cemento Portland para hormigón estructural"
+        },
+        "arena": {
+          "factor": 0.4,
+          "unidad": "m³",
+          "descripcion": "Arena para hormigón"
+        },
+        "grava": {
+          "factor": 0.6,
+          "unidad": "m³",
+          "descripcion": "Grava para hormigón"
+        },
+        "varillas_acero": {
+          "factor": 90,
+          "unidad": "kg",
+          "descripcion": "Acero de refuerzo por m³ de hormigón"
+        },
+        "moldajes": {
+          "factor": 0.8,
+          "unidad": "m²",
+          "descripcion": "Moldajes de madera o metálicos"
+        },
+        "pintura": {
+          "factor": 0.2,
+          "unidad": "litros",
+          "descripcion": "Pintura para hormigón"
+        }
+      }
+    },
+    "Casa de Ladrillo": {
+      "nombre": "Albañilería armada",
+      "descripcion": "Muros de ladrillo con refuerzo de acero",
+      "materiales": {
+        "ladrillos": {
+          "factor": 60,
+          "unidad": "unidades",
+          "descripcion": "Ladrillos cerámicos huecos"
+        },
+        "cemento": {
+          "factor": 0.4,
+          "unidad": "sacos 25kg",
+          "descripcion": "Cemento para mortero"
+        },
+        "arena": {
+          "factor": 0.3,
+          "unidad": "m³",
+          "descripcion": "Arena fina para mortero"
+        },
+        "varillas_acero": {
+          "factor": 8,
+          "unidad": "kg",
+          "descripcion": "Acero de refuerzo vertical"
+        },
+        "grout": {
+          "factor": 0.08,
+          "unidad": "m³",
+          "descripcion": "Grout para relleno de celdas"
+        },
+        "pintura": {
+          "factor": 0.18,
+          "unidad": "litros",
+          "descripcion": "Pintura para muros"
+        }
+      }
+    },
+    "Casa Prefabricada": {
+      "nombre": "Construcción prefabricada",
+      "descripcion": "Módulos o paneles prefabricados",
+      "materiales": {
+        "paneles_prefabricados": {
+          "factor": 1.2,
+          "unidad": "m²",
+          "descripcion": "Paneles SIP o módulos prefabricados"
+        },
+        "estructura_metalica": {
+          "factor": 15,
+          "unidad": "kg",
+          "descripcion": "Estructura metálica de soporte"
+        },
+        "aislante": {
+          "factor": 0.06,
+          "unidad": "m³",
+          "descripcion": "Aislante térmico integrado"
+        },
+        "cemento": {
+          "factor": 0.2,
+          "unidad": "sacos 25kg",
+          "descripcion": "Cemento para cimientos"
+        },
+        "conectores": {
+          "factor": 3,
+          "unidad": "kg",
+          "descripcion": "Conectores y herrajes de montaje"
+        },
+        "pintura": {
+          "factor": 0.08,
+          "unidad": "litros",
+          "descripcion": "Pintura de acabado"
+        }
+      }
+    },
+    "Casa de Adobe": {
+      "nombre": "Construcción en tierra",
+      "descripcion": "Adobe y quincha tradicional",
+      "materiales": {
+        "adobes": {
+          "factor": 25,
+          "unidad": "unidades",
+          "descripcion": "Adobes de 30x40x10 cm"
+        },
+        "barro": {
+          "factor": 0.02,
+          "unidad": "m³",
+          "descripcion": "Barro para mortero de junta"
+        },
+        "paja": {
+          "factor": 5,
+          "unidad": "kg",
+          "descripcion": "Paja para refuerzo del barro"
+        },
+        "madera": {
+          "factor": 0.03,
+          "unidad": "m³",
+          "descripcion": "Madera para estructura de techo"
+        },
+        "cal": {
+          "factor": 15,
+          "unidad": "kg",
+          "descripcion": "Cal para revoque protector"
+        },
+        "cemento": {
+          "factor": 0.1,
+          "unidad": "sacos 25kg",
+          "descripcion": "Cemento para sobrecimiento"
+        }
+      }
+    },
+    "Casa Sustentable": {
+      "nombre": "Construcción sustentable",
+      "descripcion": "Materiales ecológicos y sistemas renovables",
+      "materiales": {
+        "bambu": {
+          "factor": 0.08,
+          "unidad": "m³",
+          "descripcion": "Bambú estructural"
+        },
+        "materiales_reciclados": {
+          "factor": 0.4,
+          "unidad": "m³",
+          "descripcion": "Materiales reciclados diversos"
+        },
+        "aislante_natural": {
+          "factor": 0.07,
+          "unidad": "m³",
+          "descripcion": "Aislantes naturales (corcho, fibras)"
+        },
+        "paneles_solares": {
+          "factor": 0.1,
+          "unidad": "m²",
+          "descripcion": "Paneles fotovoltaicos"
+        },
+        "sistema_agua": {
+          "factor": 0.05,
+          "unidad": "m²",
+          "descripcion": "Sistema de recolección de agua lluvia"
+        },
+        "cal_natural": {
+          "factor": 20,
+          "unidad": "kg",
+          "descripcion": "Cal natural para acabados"
+        }
+      }
+    }
+  },
+  "instalaciones": {
+    "electricas": {
+      "enchufes_por_habitacion": 4,
+      "enchufes_por_bano": 2,
+      "enchufes_comunes": 8,
+      "interruptores_por_habitacion": 1,
+      "interruptores_por_bano": 1,
+      "interruptores_comunes": 4,
+      "cable_por_m2": 2.5,
+      "unidad_cable": "metros"
+    },
+    "sanitarias": {
+      "inodoros_por_bano": 1,
+      "lavamanos_por_bano": 1,
+      "duchas_por_bano": 1,
+      "tuberia_agua_por_m2": 1.5,
+      "tuberia_drenaje_por_m2": 1,
+      "unidad_tuberia": "metros"
+    },
+    "aberturas": {
+      "ventanas_por_habitacion": 1.5,
+      "puertas_interiores_por_habitacion": 1,
+      "puertas_por_bano": 1,
+      "puerta_principal": 1,
+      "puerta_servicio": 1
+    }
+  }
+}

@@ -174,7 +174,7 @@ nav a, .nav-links a {
     font-weight: 700;
     padding: 1rem 1.8rem;
     border-radius: 6px;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s ease, border-color 0.3s ease;
     position: relative;
     overflow: hidden;
     box-shadow: var(--construction-shadow);
@@ -183,6 +183,10 @@ nav a, .nav-links a {
     letter-spacing: 0.02em;
     text-transform: uppercase;
     font-family: 'Roboto Condensed', sans-serif;
+    will-change: transform, box-shadow;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    contain: paint;
 }
 
 nav a::before, .nav-links a::before {
@@ -194,6 +198,7 @@ nav a::before, .nav-links a::before {
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
     transition: left 0.6s ease;
+    pointer-events: none;
 }
 
 nav a:hover::before, .nav-links a:hover::before {
@@ -335,6 +340,7 @@ nav a:hover, .nav-links a:hover {
     height: 6px;
     background: var(--caution-stripes);
     animation: slideStripes 3s linear infinite;
+    pointer-events: none;
 }
 
 .construction-type::after {
@@ -572,7 +578,7 @@ nav a:hover, .nav-links a:hover {
     font-size: 1.1rem;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s ease, border-color 0.3s ease;
     margin-top: 2rem;
     text-transform: uppercase;
     font-family: 'Roboto Condensed', sans-serif;
@@ -580,6 +586,10 @@ nav a:hover, .nav-links a:hover {
     box-shadow: var(--construction-shadow);
     position: relative;
     overflow: hidden;
+    will-change: transform, box-shadow;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    contain: paint;
 }
 
 #calculatorContainer button::before {
@@ -591,6 +601,7 @@ nav a:hover, .nav-links a:hover {
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
     transition: left 0.6s ease;
+    pointer-events: none;
 }
 
 #calculatorContainer button:hover::before {

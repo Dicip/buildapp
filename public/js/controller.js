@@ -1,378 +1,180 @@
-<h3>🏗️ Sistema de Construcción</h3>
-<div class="form-grid">
-    <div class="form-section">
-        <input type="number" id="areaTotal" placeholder="Área total construida (m²)" required min="30" max="500" step="0.1">
-        <input type="number" id="largo" placeholder="Largo de la construcción (m)" required min="5" max="30" step="0.1">
-    </div>
-    <div class="form-section">
-        <input type="number" id="ancho" placeholder="Ancho de la construcción (m)" required min="4" max="20" step="0.1">
-        <input type="number" id="altura" placeholder="Altura promedio (m)" required min="2.4" max="4" step="0.1" value="2.6">
-    </div>
-</div>
+// Controlador principal para la aplicación de construcción
 
-<h3>🏠 Distribución</h3>
-<div class="form-grid">
-    <div class="form-section">
-        <input type="number" id="habitaciones" placeholder="Número de habitaciones" required min="1" max="8">
-    </div>
-    <div class="form-section">
-        <input type="number" id="banos" placeholder="Número de baños" required min="1" max="6">
-    </div>
-</div>
+// Esperar a que el DOM esté completamente cargado
+document.addEventListener('DOMContentLoaded', function() {
+    // Configurar modal si existe
+    const modal = document.getElementById('myModal');
+    const closeBtn = document.getElementsByClassName('close')[0];
+    
+    if (closeBtn) {
+        closeBtn.onclick = function() {
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+    }
+    
+    if (modal) {
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    }
+});
 
-<h3>🏗️ Hormigón Armado</h3>
-<div class="form-grid">
-    <div class="form-section">
-        <select id="resistenciaHormigon" required>
-            <option value="">Resistencia del hormigón</option>
-            <option value="h20">H20 (200 kg/cm²)</option>
-            <option value="h25">H25 (250 kg/cm²)</option>
-            <option value="h30">H30 (300 kg/cm²)</option>
-        </select>
-        <select id="tipoAcero" required>
-            <option value="">Tipo de acero</option>
-            <option value="a44_28h">A44-28H</option>
-            <option value="a63_42h">A63-42H</option>
-        </select>
-    </div>
-    <div class="form-section">
-        <input type="number" id="espesorLosa" placeholder="Espesor de losa (cm)" required min="12" max="25" value="15">
-    </div>
-</div>
+// Función principal para calcular materiales
+function calcularMateriales(tipo) {
+    try {
+        // Obtener valores básicos
+        const areaTotal = parseFloat(document.getElementById('areaTotal')?.value) || 0;
+        const largo = parseFloat(document.getElementById('largo')?.value) || 0;
+        const ancho = parseFloat(document.getElementById('ancho')?.value) || 0;
+        const altura = parseFloat(document.getElementById('altura')?.value) || 2.6;
+        const habitaciones = parseInt(document.getElementById('habitaciones')?.value) || 1;
+        const banos = parseInt(document.getElementById('banos')?.value) || 1;
+        
+        // Validar datos básicos
+        if (!areaTotal || !largo || !ancho) {
+            mostrarError('Por favor, complete todos los campos obligatorios.');
+            return;
+        }
+        
+        // Cargar coeficientes y calcular
+        fetch('/js/coeficientes.json')
+            .then(response => response.json())
+            .then(data => {
+                const resultado = calcularSegunTipo(tipo, {
+                    areaTotal,
+                    largo,
+                    ancho,
+                    altura,
+                    habitaciones,
+                    banos
+                }, data);
+                
+                mostrarResultado(resultado);
+            })
+            .catch(error => {
+                console.error('Error al cargar coeficientes:', error);
+                mostrarError('Error al cargar los datos de cálculo.');
+            });
+            
+    } catch (error) {
+        console.error('Error en cálculo:', error);
+        mostrarError('Error en el cálculo. Verifique los datos ingresados.');
+    }
+}
 
-<h3>🌍 Condiciones del Sitio</h3>
-<div class="form-grid">
-    <div class="form-section">
-        <select id="zonaClimatica" required>
-            <option value="">Zona climática</option>
-            <option value="norte">Norte (Arica-Antofagasta)</option>
-            <option value="centro">Centro (Valparaíso-O'Higgins)</option>
-            <option value="sur">Sur (Araucanía-Los Ríos)</option>
-        </select>
-    </div>
-    <div class="form-section">
-        <select id="zonaSismica" required>
-            <option value="">Zona sísmica</option>
-            <option value="zona1">Zona 1 (Baja sismicidad)</option>
-            <option value="zona2">Zona 2 (Sismicidad intermedia)</option>
-            <option value="zona3">Zona 3 (Alta sismicidad)</option>
-        </select>
-    </div>
-</div>
+// Función para calcular según el tipo de construcción
+function calcularSegunTipo(tipo, datos, coeficientes) {
+    const tipoData = coeficientes[tipo];
+    if (!tipoData) {
+        throw new Error(`Tipo de construcción '${tipo}' no encontrado`);
+    }
+    
+    const resultado = {
+        tipo: tipoData.nombre,
+        descripcion: tipoData.descripcion,
+        materiales: []
+    };
+    
+    // Calcular materiales según coeficientes
+    for (const [material, factor] of Object.entries(tipoData.factores)) {
+        const cantidad = Math.ceil(datos.areaTotal * factor);
+        resultado.materiales.push({
+            nombre: material,
+            cantidad: cantidad,
+            unidad: tipoData.unidades[material] || 'unidad'
+        });
+    }
+    
+    return resultado;
+}
 
-<h3>🌲 Especificaciones del Sistema</h3>
-<div class="form-grid">
-    <div class="form-section">
-        <input type="number" id="areaTotal" placeholder="Área total construida (m²)" required min="30" max="500" step="0.1">
-        <input type="number" id="largo" placeholder="Largo de la construcción (m)" required min="5" max="30" step="0.1">
-    </div>
-    <div class="form-section">
-        <input type="number" id="ancho" placeholder="Ancho de la construcción (m)" required min="4" max="20" step="0.1">
-        <input type="number" id="altura" placeholder="Altura promedio (m)" required min="2.4" max="4" step="0.1" value="2.6">
-    </div>
-</div>
+// Función para mostrar resultados
+function mostrarResultado(resultado) {
+    const resultDiv = document.getElementById('result');
+    if (!resultDiv) return;
+    
+    let html = `
+        <div class="resultado-container">
+            <h3>📋 Resultado del Cálculo</h3>
+            <div class="tipo-construccion">
+                <h4>${resultado.tipo}</h4>
+                <p>${resultado.descripcion}</p>
+            </div>
+            <div class="materiales-lista">
+                <h4>🔨 Materiales Necesarios:</h4>
+                <ul>
+    `;
+    
+    resultado.materiales.forEach(material => {
+        html += `<li><strong>${material.nombre}:</strong> ${material.cantidad} ${material.unidad}</li>`;
+    });
+    
+    html += `
+                </ul>
+            </div>
+            <div class="nota-importante">
+                <p><strong>Nota:</strong> Estos cálculos son estimativos. Se recomienda consultar con un profesional para proyectos específicos.</p>
+            </div>
+        </div>
+    `;
+    
+    resultDiv.innerHTML = html;
+    resultDiv.scrollIntoView({ behavior: 'smooth' });
+}
 
-<h3>🏠 Distribución</h3>
-<div class="form-grid">
-    <div class="form-section">
-        <input type="number" id="habitaciones" placeholder="Número de habitaciones" required min="1" max="8">
-    </div>
-    <div class="form-section">
-        <input type="number" id="banos" placeholder="Número de baños" required min="1" max="6">
-    </div>
-</div>
+// Función para mostrar errores
+function mostrarError(mensaje) {
+    const resultDiv = document.getElementById('result');
+    if (!resultDiv) {
+        alert(mensaje);
+        return;
+    }
+    
+    resultDiv.innerHTML = `
+        <div class="error-container">
+            <h3>⚠️ Error</h3>
+            <p>${mensaje}</p>
+        </div>
+    `;
+    resultDiv.scrollIntoView({ behavior: 'smooth' });
+}
 
-<h3>🌲 Construcción en Madera</h3>
-<div class="form-grid">
-    <div class="form-section">
-        <select id="tipoMadera" required>
-            <option value="">Tipo de madera</option>
-            <option value="pino_radiata">Pino Radiata</option>
-            <option value="roble">Roble</option>
-            <option value="coigue">Coigüe</option>
-        </select>
-        <select id="sistemaConstructivo" required>
-            <option value="">Sistema constructivo</option>
-            <option value="entramado_2x4">Entramado 2x4"</option>
-            <option value="entramado_2x6">Entramado 2x6"</option>
-            <option value="paneles_clt">Paneles CLT</option>
-        </select>
-    </div>
-    <div class="form-section">
-        <input type="number" id="humedadMadera" placeholder="Humedad de la madera (%)" required min="8" max="18" value="12">
-    </div>
-</div>
+// Función para mostrar modal con información
+function mostrarModal(titulo, descripcion) {
+    const modal = document.getElementById('myModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDescription = document.getElementById('modalDescription');
+    
+    if (modal && modalTitle && modalDescription) {
+        modalTitle.textContent = titulo;
+        modalDescription.textContent = descripcion;
+        modal.style.display = 'block';
+    }
+}
 
-<h3>🌍 Condiciones del Sitio</h3>
-<div class="form-grid">
-    <div class="form-section">
-        <select id="zonaClimatica" required>
-            <option value="">Zona climática</option>
-            <option value="norte">Norte (Arica-Antofagasta)</option>
-            <option value="centro">Centro (Valparaíso-O'Higgins)</option>
-            <option value="sur">Sur (Araucanía-Los Ríos)</option>
-        </select>
-    </div>
-    <div class="form-section">
-        <select id="zonaSismica" required>
-            <option value="">Zona sísmica</option>
-            <option value="zona1">Zona 1 (Baja sismicidad)</option>
-            <option value="zona2">Zona 2 (Sismicidad intermedia)</option>
-            <option value="zona3">Zona 3 (Alta sismicidad)</option>
-        </select>
-    </div>
-</div>
+// Función para validar formularios
+function validarFormulario() {
+    const campos = ['areaTotal', 'largo', 'ancho'];
+    let valido = true;
+    
+    campos.forEach(campo => {
+        const elemento = document.getElementById(campo);
+        if (elemento && !elemento.value) {
+            elemento.style.borderColor = '#ff4444';
+            valido = false;
+        } else if (elemento) {
+            elemento.style.borderColor = '';
+        }
+    });
+    
+    return valido;
+}
 
-<h3>🔩 Especificaciones del Sistema</h3>
-<div class="form-grid">
-    <div class="form-section">
-        <input type="number" id="areaTotal" placeholder="Área total construida (m²)" required min="30" max="500" step="0.1">
-        <input type="number" id="largo" placeholder="Largo de la construcción (m)" required min="5" max="30" step="0.1">
-    </div>
-    <div class="form-section">
-        <input type="number" id="ancho" placeholder="Ancho de la construcción (m)" required min="4" max="20" step="0.1">
-        <input type="number" id="altura" placeholder="Altura promedio (m)" required min="2.4" max="4" step="0.1" value="2.6">
-    </div>
-</div>
-
-<h3>🏠 Distribución</h3>
-<div class="form-grid">
-    <div class="form-section">
-        <input type="number" id="habitaciones" placeholder="Número de habitaciones" required min="1" max="8">
-    </div>
-    <div class="form-section">
-        <input type="number" id="banos" placeholder="Número de baños" required min="1" max="6">
-    </div>
-</div>
-
-<h3>🔩 Steel Framing</h3>
-<div class="form-grid">
-    <div class="form-section">
-        <select id="espesorPerfil" required>
-            <option value="">Espesor del perfil</option>
-            <option value="0.6mm">0.6 mm</option>
-            <option value="0.8mm">0.8 mm</option>
-            <option value="1.0mm">1.0 mm</option>
-            <option value="1.2mm">1.2 mm</option>
-        </select>
-        <select id="tipoAislante" required>
-            <option value="">Tipo de aislante</option>
-            <option value="lana_mineral">Lana Mineral</option>
-            <option value="poliestireno">Poliestireno Expandido</option>
-            <option value="poliuretano">Poliuretano</option>
-        </select>
-    </div>
-    <div class="form-section">
-        <input type="number" id="espesorAislante" placeholder="Espesor del aislante (mm)" required min="50" max="150" value="100">
-    </div>
-</div>
-
-<h3>🌍 Condiciones del Sitio</h3>
-<div class="form-grid">
-    <div class="form-section">
-        <select id="zonaClimatica" required>
-            <option value="">Zona climática</option>
-            <option value="norte">Norte (Arica-Antofagasta)</option>
-            <option value="centro">Centro (Valparaíso-O'Higgins)</option>
-            <option value="sur">Sur (Araucanía-Los Ríos)</option>
-        </select>
-    </div>
-    <div class="form-section">
-        <select id="zonaSismica" required>
-            <option value="">Zona sísmica</option>
-            <option value="zona1">Zona 1 (Baja sismicidad)</option>
-            <option value="zona2">Zona 2 (Sismicidad intermedia)</option>
-            <option value="zona3">Zona 3 (Alta sismicidad)</option>
-        </select>
-    </div>
-</div>
-
-<h3>🌲 Especificaciones del Sistema</h3>
-<div class="form-grid">
-    <div class="form-section">
-        <input type="number" id="areaTotal" placeholder="Área total construida (m²)" required min="30" max="500" step="0.1">
-        <input type="number" id="largo" placeholder="Largo de la construcción (m)" required min="5" max="30" step="0.1">
-    </div>
-    <div class="form-section">
-        <input type="number" id="ancho" placeholder="Ancho de la construcción (m)" required min="4" max="20" step="0.1">
-        <input type="number" id="altura" placeholder="Altura promedio (m)" required min="2.4" max="4" step="0.1" value="2.6">
-    </div>
-</div>
-
-<h3>🏠 Distribución</h3>
-<div class="form-grid">
-    <div class="form-section">
-        <input type="number" id="habitaciones" placeholder="Número de habitaciones" required min="1" max="8">
-    </div>
-    <div class="form-section">
-        <input type="number" id="banos" placeholder="Número de baños" required min="1" max="6">
-    </div>
-</div>
-
-<h3>🌲 Construcción en Madera</h3>
-<div class="form-grid">
-    <div class="form-section">
-        <select id="tipoMadera" required>
-            <option value="">Tipo de madera</option>
-            <option value="pino_radiata">Pino Radiata</option>
-            <option value="roble">Roble</option>
-            <option value="coigue">Coigüe</option>
-        </select>
-        <select id="sistemaConstructivo" required>
-            <option value="">Sistema constructivo</option>
-            <option value="entramado_2x4">Entramado 2x4"</option>
-            <option value="entramado_2x6">Entramado 2x6"</option>
-            <option value="paneles_clt">Paneles CLT</option>
-        </select>
-    </div>
-    <div class="form-section">
-        <input type="number" id="humedadMadera" placeholder="Humedad de la madera (%)" required min="8" max="18" value="12">
-    </div>
-</div>
-
-<h3>🌍 Condiciones del Sitio</h3>
-<div class="form-grid">
-    <div class="form-section">
-        <select id="zonaClimatica" required>
-            <option value="">Zona climática</option>
-            <option value="norte">Norte (Arica-Antofagasta)</option>
-            <option value="centro">Centro (Valparaíso-O'Higgins)</option>
-            <option value="sur">Sur (Araucanía-Los Ríos)</option>
-        </select>
-    </div>
-    <div class="form-section">
-        <select id="zonaSismica" required>
-            <option value="">Zona sísmica</option>
-            <option value="zona1">Zona 1 (Baja sismicidad)</option>
-            <option value="zona2">Zona 2 (Sismicidad intermedia)</option>
-            <option value="zona3">Zona 3 (Alta sismicidad)</option>
-        </select>
-    </div>
-</div>
-
-<h3>🏭 Especificaciones del Sistema</h3>
-<div class="form-grid">
-    <div class="form-section">
-        <input type="number" id="areaTotal" placeholder="Área total construida (m²)" required min="30" max="500" step="0.1">
-        <input type="number" id="largo" placeholder="Largo de la construcción (m)" required min="5" max="30" step="0.1">
-    </div>
-    <div class="form-section">
-        <input type="number" id="ancho" placeholder="Ancho de la construcción (m)" required min="4" max="20" step="0.1">
-        <input type="number" id="altura" placeholder="Altura promedio (m)" required min="2.4" max="4" step="0.1" value="2.6">
-    </div>
-</div>
-
-<h3>🏠 Distribución</h3>
-<div class="form-grid">
-    <div class="form-section">
-        <input type="number" id="habitaciones" placeholder="Número de habitaciones" required min="1" max="8">
-    </div>
-    <div class="form-section">
-        <input type="number" id="banos" placeholder="Número de baños" required min="1" max="6">
-    </div>
-</div>
-
-<h3>🏭 Construcción Prefabricada</h3>
-<div class="form-grid">
-    <div class="form-section">
-        <select id="tipoPrefabricado" required>
-            <option value="">Tipo de prefabricado</option>
-            <option value="paneles_hormigon">Paneles de Hormigón</option>
-            <option value="modulos_madera">Módulos de Madera</option>
-            <option value="paneles_sip">Paneles SIP</option>
-            <option value="contenedores">Contenedores Adaptados</option>
-        </select>
-    </div>
-    <div class="form-section">
-        <select id="nivelTerminacion" required>
-            <option value="">Nivel de terminación</option>
-            <option value="basico">Básico</option>
-            <option value="medio">Medio</option>
-            <option value="alto">Alto</option>
-        </select>
-    </div>
-</div>
-
-<h3>🌍 Condiciones del Sitio</h3>
-<div class="form-grid">
-    <div class="form-section">
-        <select id="zonaClimatica" required>
-            <option value="">Zona climática</option>
-            <option value="norte">Norte (Arica-Antofagasta)</option>
-            <option value="centro">Centro (Valparaíso-O'Higgins)</option>
-            <option value="sur">Sur (Araucanía-Los Ríos)</option>
-        </select>
-    </div>
-    <div class="form-section">
-        <select id="zonaSismica" required>
-            <option value="">Zona sísmica</option>
-            <option value="zona1">Zona 1 (Baja sismicidad)</option>
-            <option value="zona2">Zona 2 (Sismicidad intermedia)</option>
-            <option value="zona3">Zona 3 (Alta sismicidad)</option>
-        </select>
-    </div>
-</div>
-
-<h3>🏺 Especificaciones del Sistema</h3>
-<div class="form-grid">
-    <div class="form-section">
-        <input type="number" id="areaTotal" placeholder="Área total construida (m²)" required min="30" max="300" step="0.1">
-        <input type="number" id="largo" placeholder="Largo de la construcción (m)" required min="5" max="25" step="0.1">
-    </div>
-    <div class="form-section">
-        <input type="number" id="ancho" placeholder="Ancho de la construcción (m)" required min="4" max="15" step="0.1">
-        <input type="number" id="altura" placeholder="Altura promedio (m)" required min="2.4" max="3.5" step="0.1" value="2.6">
-    </div>
-</div>
-
-<h3>🏠 Distribución</h3>
-<div class="form-grid">
-    <div class="form-section">
-        <input type="number" id="habitaciones" placeholder="Número de habitaciones" required min="1" max="6">
-    </div>
-    <div class="form-section">
-        <input type="number" id="banos" placeholder="Número de baños" required min="1" max="3">
-    </div>
-</div>
-
-<h3>🏺 Construcción en Adobe</h3>
-<div class="form-grid">
-    <div class="form-section">
-        <select id="tipoAdobe" required>
-            <option value="">Tipo de adobe</option>
-            <option value="tradicional">Adobe Tradicional</option>
-            <option value="estabilizado">Adobe Estabilizado</option>
-            <option value="comprimido">Adobe Comprimido</option>
-        </select>
-        <input type="number" id="espesorMuro" placeholder="Espesor del muro (cm)" required min="30" max="50" value="40">
-    </div>
-    <div class="form-section">
-        <select id="tipoRevoque" required>
-            <option value="">Tipo de revoque</option>
-            <option value="barro_cal">Barro y Cal</option>
-            <option value="cemento_cal">Cemento y Cal</option>
-        </select>
-    </div>
-</div>
-
-<h3>🌍 Condiciones del Sitio</h3>
-<div class="form-grid">
-    <div class="form-section">
-        <select id="zonaClimatica" required>
-            <option value="">Zona climática</option>
-            <option value="norte">Norte (Arica-Antofagasta)</option>
-            <option value="centro">Centro (Valparaíso-O'Higgins)</option>
-            <option value="sur">Sur (Araucanía-Los Ríos)</option>
-        </select>
-    </div>
-    <div class="form-section">
-        <select id="zonaSismica" required>
-            <option value="">Zona sísmica</option>
-            <option value="zona1">Zona 1 (Baja sismicidad)</option>
-            <option value="zona2">Zona 2 (Sismicidad intermedia)</option>
-        </select>
-    </div>
-</div>
-
-<button onclick="calcularMateriales('${type}')">Calcular Materiales Necesarios</button>
-<div id="result"></div>
+// Exportar funciones para uso global
+window.calcularMateriales = calcularMateriales;
+window.mostrarModal = mostrarModal;
+window.validarFormulario = validarFormulario;
